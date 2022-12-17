@@ -16,7 +16,7 @@ authInstance.interceptors.request.use(config => {
 
 noAuthInstance.interceptors.response.use(
   response => {
-    return response;
+    return response.data;
   },
   error => {
     const errorResponse = {
@@ -29,7 +29,7 @@ noAuthInstance.interceptors.response.use(
 
 authInstance.interceptors.response.use(
   response => {
-    return response;
+    return response.data;
   },
   error => {
     // TODO: Unauthorization 에러에 대한 refresh Token으로의 재인증요청 처리 필요

@@ -9,25 +9,42 @@ import Button from '../components/common/Button';
 import Input from '../components/common/Input';
 import Label from '../components/common/Label';
 import ValidationText from '../components/common/ValidationText';
-
+import { USER_VALIDATION } from '../constants/validation.js';
 const Signup = () => {
   const navigate = useNavigate();
-  const [loginId, onChangeID, isValidID, validTextID] = useInput('', 'loginId');
-  const [nickname, onChangeNickname, isValidNickname, validTextNickname] = useInput('', 'nickname');
+  //value, valid, onChange
+  const [loginId, loginIdValidation, handleChangeLoginId] = useInput('', USER_VALIDATION.LOGIN_ID);
 
-  const idCheck = loginId;
-  const [password, onChangePW, isValidPW, validTextPW] = useInput('', 'password', idCheck);
-
-  const pwCheck = password;
-  const [pwconfirm, onChangePWconfirm, isValidPWconfirm, validTextPWConfirm] = useInput(
+  const [nickname, nicknameValidation, handleChangeNickname] = useInput(
     '',
-    'pwconfirm',
-    pwCheck,
+    USER_VALIDATION.NICKNAME,
   );
+
+  const [password, passwordValidation, handlePasswordChange] = useInput(
+    '',
+    USER_VALIDATION.PASSWORD,
+    loginId,
+  );
+
+  const [pwconfirm, pwConfirmValidation, handlePwConfirmChange] = useInput(
+    '',
+    USER_VALIDATION.PASSWORD_CONFIRM,
+    password,
+  );
+
+  const checkInputValidated = () => {
+    return (
+      loginIdValidation.isInputValidated &&
+      nicknameValidation.isInputValidated &&
+      passwordValidation.isInputValidated &&
+      pwConfirmValidation.isInputValidated
+    );
+  };
+
   //중복검사는 onBlur
   const postUserInfo = async e => {
     e.preventDefault();
-    if (isValidID && isValidNickname && isValidPW && isValidPWconfirm) {
+    if (checkInputValidated) {
       try {
         await userApi.join({
           loginId,
@@ -54,41 +71,49 @@ const Signup = () => {
           height="30px"
           placeholder="ID를 입력하세요."
           value={loginId}
-          onChange={onChangeID}
+          onChange={handleChangeLoginId}
           autoFocus
           required
         />
-        <ValidationText isValidationSuccess={isValidID}>{validTextID}</ValidationText>
+        <ValidationText isValidationSuccess={loginIdValidation.isInputValidated}>
+          {loginIdValidation.message}
+        </ValidationText>
         <Label>닉네임</Label>
         <Input
           width="366px"
           height="30px"
           placeholder="닉네임을 입력하세요."
           value={nickname}
-          onChange={onChangeNickname}
+          onChange={handleChangeNickname}
           required
         />
-        <ValidationText isValidationSuccess={isValidNickname}>{validTextNickname}</ValidationText>
+        <ValidationText isValidationSuccess={nicknameValidation.isInputValidated}>
+          {nicknameValidation.message}
+        </ValidationText>
         <Label>비밀번호</Label>
         <Input
           width="366px"
           height="30px"
           placeholder="비밀번호를 입력하세요."
           value={password}
-          onChange={onChangePW}
+          onChange={handlePasswordChange}
           required
         />
-        <ValidationText isValidationSuccess={isValidPW}>{validTextPW}</ValidationText>
+        <ValidationText isValidationSuccess={passwordValidation.isInputValidated}>
+          {passwordValidation.message}
+        </ValidationText>
         <Label>비밀번호 확인</Label>
         <Input
           width="366px"
           height="30px"
           placeholder="비밀번호를 입력하세요."
           value={pwconfirm}
-          onChange={onChangePWconfirm}
+          onChange={handlePwConfirmChange}
           required
         />
-        <ValidationText isValidationSuccess={isValidPWconfirm}>{validTextPWConfirm}</ValidationText>
+        <ValidationText isValidationSuccess={pwConfirmValidation.isInputValidated}>
+          {pwConfirmValidation.message}
+        </ValidationText>
         <ButtonWrap>
           <Button style={{ height: '50px' }}>회원가입</Button>
           <Button

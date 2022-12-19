@@ -8,7 +8,7 @@ const authInstance = axios.create({ baseURL: BASE_URL });
 authInstance.interceptors.request.use(config => {
   config.headers = {
     // TODO: accessToken storage에서 가져오도록 추가
-    Authorization: `Bearer TOKEN`,
+    Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
   };
 
   return config;

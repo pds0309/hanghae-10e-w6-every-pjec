@@ -1,9 +1,48 @@
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { login, logout, __getMyProfile } from '../redux/modules/UserSlice';
 import { Colors } from '../styles';
+import { useDispatch } from 'react-redux';
 
 // TODO: 사용자 인증 상태일 시 UI 변경이 되어야 한다.
-const Header = () => {
+const Header = ({ user, isLogined }) => {
+  const dispatch = useDispatch();
+  const accessToken = localStorage.getItem('accessToken');
+  useEffect(() => {
+    if (accessToken) {
+      dispatch(__getMyProfile());
+      dispatch(login());
+    }
+  }, [isLogined]);
+
+  const handleLogoutClick = () => {
+    localStorage.clear();
+    dispatch(logout());
+  };
+
+  const UnAuthSectionContents = () => {
+    return (
+      <>
+        <HeaderLink to="signup">회원가입</HeaderLink>
+        <HeaderLink to="signin">로그인</HeaderLink>
+      </>
+    );
+  };
+
+  const AuthSectionContents = () => {
+    return (
+      <>
+        {/* TODO: 인증 상태 시 헤더바 UI/기능 완성하기 */}
+        <HeaderLink to="postupload">모집글 작성</HeaderLink>
+        <HeaderLink to="profile">{user.nickname}</HeaderLink>
+        <HeaderLink to="" onClick={handleLogoutClick}>
+          로그아웃
+        </HeaderLink>
+      </>
+    );
+  };
+
   return (
     <StyledHeader>
       <div>
@@ -12,8 +51,7 @@ const Header = () => {
         </HeaderLink>
       </div>
       <RightSection>
-        <HeaderLink to="signup">회원가입</HeaderLink>
-        <HeaderLink to="signin">로그인</HeaderLink>
+        {isLogined && user ? <AuthSectionContents /> : <UnAuthSectionContents />}
       </RightSection>
     </StyledHeader>
   );

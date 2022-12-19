@@ -1,4 +1,4 @@
-import { noAuthInstance } from './instance';
+import { authInstance, noAuthInstance } from './instance';
 
 const USER_API = '/user';
 
@@ -20,7 +20,7 @@ const userApi = {
   validateNickname: nickname =>
     noAuthInstance.get(USER_API + `/signup/nickname?nickname=${nickname}`),
   // TODO: 회원 본인 정보 조회
-  me: () => {},
+  me: () => authInstance.get(USER_API + '/mypage'),
   // TODO: 회원 정보 수정
 };
 

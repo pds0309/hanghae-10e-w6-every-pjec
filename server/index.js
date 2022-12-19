@@ -65,7 +65,7 @@ server.get('/posts', (req, res) => {
   return res.jsonp(
     posts.map(post => {
       const { userId, nickname, image } = router.db.__wrapped__.user.find(
-        user => user.userId === post.postId,
+        user => user.userId === post.userId,
       );
       return { ...post, userId, nickname, image };
     }),

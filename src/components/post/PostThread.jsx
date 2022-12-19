@@ -1,8 +1,14 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { clearError, __getPostById } from '../../redux/modules/PostSlice';
+import {
+  clearError,
+  initDeleteSuccess,
+  initUpdateSuccess,
+  __deletePostById,
+  __getPostById,
+} from '../../redux/modules/PostSlice';
 import DivideLine from '../common/DivideLine';
 import ProfileImage from '../common/ProfileImage';
 import TwinInfoBox from '../common/TwinInfoBox';
@@ -11,7 +17,16 @@ import PostBasicInfo from './PostBasicInfo';
 
 const PostThread = ({ postId }) => {
   const dispatch = useDispatch();
-  const { post, isLoading, error } = useSelector(state => state.posts);
+  const navigate = useNavigate();
+  const { user } = useSelector(state => state.user);
+  const { post, isLoading, error, deleteSuccess } = useSelector(state => state.posts);
+
+  useEffect(() => {
+    return () => {
+      dispatch(initDeleteSuccess());
+      dispatch(initUpdateSuccess());
+    };
+  }, []);
 
   useEffect(() => {
     dispatch(__getPostById({ postId }));
@@ -22,6 +37,21 @@ const PostThread = ({ postId }) => {
       return () => dispatch(clearError());
     }
   }, [error, dispatch]);
+
+  useEffect(() => {
+    if (deleteSuccess) {
+      alert('삭제 완료!');
+      navigate('/');
+      return;
+    }
+    error && alert(error.message);
+  }, [deleteSuccess]);
+
+  const handlePostDeleteLink = () => {
+    if (confirm('정말 삭제하시겠어요?')) {
+      dispatch(__deletePostById({ postId }));
+    }
+  };
 
   if (isLoading) {
     return (
@@ -57,9 +87,15 @@ const PostThread = ({ postId }) => {
               />
             </WriterBox>
             <WriterBox>
-              {/* TODO: 수정 페이지로 이동 */}
-              <Link to="">수정하기</Link>
-              <Link to="">삭제하기</Link>
+              {user && user.userId === post.userId && (
+                <>
+                  {/* TODO: 수정 페이지로 이동 */}
+                  <Link to="">수정하기</Link>
+                  <Link to="" onClick={handlePostDeleteLink}>
+                    삭제하기
+                  </Link>
+                </>
+              )}
             </WriterBox>
           </WriteInfoContainer>
           <DivideLine />

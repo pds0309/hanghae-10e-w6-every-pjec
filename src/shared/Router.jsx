@@ -9,11 +9,13 @@ import Signin from '../pages/Signin';
 import Signup from '../pages/Signup';
 import BookMark from '../pages/BookMark';
 import Header from './Header';
+import { useSelector } from 'react-redux';
 
 const Router = () => {
+  const { user, isLogined } = useSelector(state => state.user);
   return (
     <BrowserRouter>
-      <Header />
+      <Header user={user} isLogined={isLogined} />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="post" element={<Post />} />

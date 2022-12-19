@@ -5,6 +5,7 @@ const initialState = {
   user: null,
   isLoading: false,
   error: null,
+  isLogined: false,
 };
 
 export const __getMyProfile = createAsyncThunk('fetchComments', async (_, thunkAPI) => {
@@ -19,7 +20,14 @@ export const __getMyProfile = createAsyncThunk('fetchComments', async (_, thunkA
 export const userSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {},
+  reducers: {
+    login: state => {
+      state.isLogined = true;
+    },
+    logout: state => {
+      state.isLogined = false;
+    },
+  },
   extraReducers: {
     [__getMyProfile.pending]: state => {
       state.isLoading = true;
@@ -35,6 +43,6 @@ export const userSlice = createSlice({
   },
 });
 
-// export const { } = userSlice.actions;
+export const { login, logout } = userSlice.actions;
 
 export default userSlice;

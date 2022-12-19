@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import userApi from '../apis/userApi';
@@ -8,9 +9,11 @@ import Label from '../components/common/Label';
 import ValidationText from '../components/common/ValidationText';
 import { USER_VALIDATION } from '../constants/validation';
 import useInput from '../hooks/useInput';
+import { login } from '../redux/modules/UserSlice';
 import { Colors } from '../styles';
 
 const Signin = () => {
+  const dispatch = useDispatch();
   const [loginId, loginIdValidation, handleChangeLoginId] = useInput('', USER_VALIDATION.LOGIN_ID);
   const [password, setPassword] = useState('');
   const [LoginFailedMessage, setLoginFailedMessage] = useState('');
@@ -24,6 +27,7 @@ const Signin = () => {
           const { accessToken, refreshToken } = res.data;
           localStorage.setItem('accessToken', accessToken);
           localStorage.setItem('refreshToken', refreshToken);
+          dispatch(login());
           navigation('/');
         })
         .catch(err => setLoginFailedMessage(err.errorMessage));

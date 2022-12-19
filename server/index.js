@@ -42,12 +42,14 @@ server.post('/user/login', (req, res) => {
   if (req.body) {
     const { loginId, password } = req.body;
     const user = router.db.__wrapped__.user.find(
-      user => user.loginId === loginId && user.password === password,
+      user => user.loginId === loginId && user.password.toString() === password.toString(),
     );
     if (user) {
-      res.append('Authorization');
-      res.setHeader('Authorization', `Bearer ${user.userId}`);
-      return res.status(200).send({ message: '로그인성공' });
+      return res.status(200).send({
+        message: '로그인성공',
+        accessToken: `Bearer ${user.userId}`,
+        refreshToken: `Bearer ${user.userId}`,
+      });
     }
   }
   return res.status(400).send({ result: true, errorMessage: '아이디 또는 비밀번호를 확인하세요' });
@@ -110,6 +112,7 @@ server.use((req, res, next) => {
       ? currentDomain.substring(0, currentDomain.length - 1)
       : currentDomain;
     req.body[currentIdFormat + 'Id'] = (currentTable[currentTable.length - 1]?.id ?? 0) + 1;
+    req.body['createdAt'] = new Date();
   }
   next();
 });

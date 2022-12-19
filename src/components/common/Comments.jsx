@@ -47,6 +47,7 @@ const Comments = () => {
 
 const Wrap = styled.div`
   width: 80%;
+  margin: auto;
 `;
 
 const CommentTitle = styled.span`

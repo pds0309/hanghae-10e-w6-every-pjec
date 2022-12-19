@@ -118,22 +118,22 @@ const Title = styled.span`
 `;
 
 const FormWrap = styled.form`
-  border: 2px solid #ffffff;
   width: fit-content;
   height: fit-content;
+  border: 2px solid #ffffff;
+  border-radius: 18px;
+  box-shadow: 1px 1px 7px 0px #ce7777;
   margin: 30px;
   padding: 30px 90px;
-  border-radius: 18px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: stretch;
-  box-shadow: 1px 1px 7px 0px #ce7777;
 `;
 
 const ButtonWrap = styled.div`
-  padding-top: 20px;
   height: 120px;
+  padding-top: 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

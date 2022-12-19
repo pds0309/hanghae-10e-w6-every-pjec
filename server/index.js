@@ -66,8 +66,8 @@ server.get('/posts', (req, res) => {
   const posts = router.db.__wrapped__.posts;
   return res.jsonp(
     posts.map(post => {
-      const { userId, nickname, image } = router.db.__wrapped__.user.filter(
-        user => user.userId === post.postId,
+      const { userId, nickname, image } = router.db.__wrapped__.user.find(
+        user => user.userId === post.userId,
       );
       return { ...post, userId, nickname, image };
     }),

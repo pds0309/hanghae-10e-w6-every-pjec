@@ -1,6 +1,6 @@
 import { noAuthInstance } from './instance';
 
-const USER_API = '/posts';
+const USER_API = '/user';
 
 const userApi = {
   // 로그인

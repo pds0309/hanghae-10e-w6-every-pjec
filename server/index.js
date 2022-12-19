@@ -47,8 +47,8 @@ server.post('/user/login', (req, res) => {
     if (user) {
       return res.status(200).send({
         message: '로그인성공',
-        accessToken: `Bearer ${user.userId}`,
-        refreshToken: `Bearer ${user.userId}`,
+        accessToken: `${user.userId}`,
+        refreshToken: `${user.userId}`,
       });
     }
   }
@@ -58,7 +58,7 @@ server.post('/user/login', (req, res) => {
 // 내 프로필 조회
 server.get('/user/mypage', (req, res) => {
   const authenticatedUserId = validAuthentication(req, res);
-  return res.jsonp(router.db.__wrapped__.user.filter(user => user.userId === authenticatedUserId));
+  return res.jsonp(router.db.__wrapped__.user.filter(user => user.userId == authenticatedUserId));
 });
 
 // 게시글 목록 전체 조회

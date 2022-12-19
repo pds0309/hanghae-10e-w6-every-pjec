@@ -1,8 +1,10 @@
 import React from 'react';
-import Comments from '../components/common/Comments';
+import Comments from '../components/comment/Comments';
+import { useParams } from 'react-router-dom';
 
 const PostDetail = () => {
-  return <Comments />;
+  const { id } = useParams();
+  return <Comments postId={id} />;
 };
 
 export default PostDetail;

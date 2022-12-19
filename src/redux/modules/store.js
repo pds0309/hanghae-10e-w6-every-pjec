@@ -1,10 +1,10 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { userSlice } from './UserSlice';
-import commentsSlice from './commentsSlice';
+import CommentSlice from './CommentSlice';
 
 const rootReducer = combineReducers({
   user: userSlice.reducer,
-  comments: commentsSlice.reducer,
+  comments: CommentSlice.reducer,
 });
 
 export const store = configureStore({

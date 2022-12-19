@@ -25,7 +25,7 @@ const initialState = {
   error: null,
 };
 
-const commentsSlice = createSlice({
+const CommentSlice = createSlice({
   name: 'comments',
   initialState,
   extraReducers: {
@@ -42,4 +42,4 @@ const commentsSlice = createSlice({
   },
 });
 
-export default commentsSlice;
+export default CommentSlice;

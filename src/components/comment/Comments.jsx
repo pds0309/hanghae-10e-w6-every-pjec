@@ -1,24 +1,20 @@
 import React, { useState } from 'react';
-import { __postComment } from '../../redux/modules/commentsSlice';
+import { __postComment } from '../../redux/modules/CommentSlice';
 
-// import { useParams } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import styled from 'styled-components';
-import DivideLine from './DivideLine';
-import Button from './Button';
+import DivideLine from '../common/DivideLine';
+import Button from '../common/Button';
 
-const Comments = () => {
-  // const { postId } = useParams();
+const Comments = ({ postId }) => {
   const dispatch = useDispatch();
-
-  const userId = 1; //있다고 치기
-  const postId = Date.now(); //있다고 치기
+  const user = useSelector(state => state.user.user);
 
   const [comment, setComment] = useState('');
 
   const postComment = () => {
-    if (userId) {
+    if (user) {
       dispatch(__postComment({ postId, comment }));
       return setComment('');
     }

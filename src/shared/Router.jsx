@@ -19,7 +19,7 @@ const Router = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="post" element={<Post />} />
-        <Route path="postdetail:postId" element={<PostDetail />} />
+        <Route path="postdetail/:id" element={<PostDetail />} />
         <Route path="postupload" element={isLogined ? <PostUpload /> : <Navigate to="/" />} />
         <Route path="profile" element={isLogined ? <Profile /> : <Navigate to="/" />} />
         <Route path="signin" element={!isLogined ? <Signin /> : <Navigate to="/" />} />

@@ -1,10 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-// import commentApi from '../../apis/commentApi';
+import commentApi from '../../apis/commentApi';
 
 export const __postComment = createAsyncThunk('postComment', async (payload, thunkAPI) => {
   try {
-    // await commentApi.submit(payload); //됐다고 치기
-    return thunkAPI.fulfillWithValue({ ...payload });
+    const { postId, comment } = payload;
+    await commentApi.submit(postId, { comment });
+    return thunkAPI.fulfillWithValue(payload);
   } catch (e) {
     return thunkAPI.rejectWithValue(e);
   }

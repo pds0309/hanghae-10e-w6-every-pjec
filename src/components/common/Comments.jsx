@@ -13,7 +13,7 @@ const Comments = () => {
   const dispatch = useDispatch();
 
   const userId = 1; //있다고 치기
-  const postId = 2; //있다고 치기
+  const postId = Date.now(); //있다고 치기
 
   const [comment, setComment] = useState('');
 

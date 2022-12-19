@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { login, __getMyProfile } from '../redux/modules/UserSlice';
+import { login, logout, __getMyProfile } from '../redux/modules/UserSlice';
 import { Colors } from '../styles';
 import { useDispatch } from 'react-redux';
 
@@ -16,6 +16,11 @@ const Header = ({ user, isLogined }) => {
     }
   }, [isLogined]);
 
+  const handleLogoutClick = () => {
+    localStorage.clear();
+    dispatch(logout());
+  };
+
   const UnAuthSectionContents = () => {
     return (
       <>
@@ -28,10 +33,12 @@ const Header = ({ user, isLogined }) => {
   const AuthSectionContents = () => {
     return (
       <>
-        {/* TODO: 인증 상태 시 헤더바 완성하기 */}
+        {/* TODO: 인증 상태 시 헤더바 UI/기능 완성하기 */}
         <HeaderLink to="postupload">모집글 작성</HeaderLink>
         <HeaderLink to="profile">{user.nickname}</HeaderLink>
-        <HeaderLink to="">로그아웃</HeaderLink>
+        <HeaderLink to="" onClick={handleLogoutClick}>
+          로그아웃
+        </HeaderLink>
       </>
     );
   };

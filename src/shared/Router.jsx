@@ -8,8 +8,8 @@ import Profile from '../pages/Profile';
 import Signin from '../pages/Signin';
 import Signup from '../pages/Signup';
 import BookMark from '../pages/BookMark';
-import Header from './Header';
 import { useSelector } from 'react-redux';
+import Header from '../components/common/Header';
 
 const Router = () => {
   const { user, isLogined } = useSelector(state => state.user);

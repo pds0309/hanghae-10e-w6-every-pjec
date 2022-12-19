@@ -1,11 +1,10 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { login, logout, __getMyProfile } from '../redux/modules/UserSlice';
-import { Colors } from '../styles';
 import { useDispatch } from 'react-redux';
+import { login, logout, __getMyProfile } from '../../redux/modules/UserSlice';
+import { Colors } from '../../styles';
 
-// TODO: 사용자 인증 상태일 시 UI 변경이 되어야 한다.
 const Header = ({ user, isLogined }) => {
   const dispatch = useDispatch();
   const accessToken = localStorage.getItem('accessToken');

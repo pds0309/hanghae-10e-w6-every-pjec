@@ -5,10 +5,12 @@ const initialState = {
   posts: [],
   post: null,
   isLoading: false,
+  updateSuccess: false,
+  deleteSuccess: false,
   error: null,
 };
 
-export const __getAllPosts = createAsyncThunk('posts', async (_, thunkAPI) => {
+export const __getAllPosts = createAsyncThunk('getPosts', async (_, thunkAPI) => {
   try {
     const result = await postApi.getAll();
     return thunkAPI.fulfillWithValue(result.data);
@@ -17,16 +19,38 @@ export const __getAllPosts = createAsyncThunk('posts', async (_, thunkAPI) => {
   }
 });
 
+export const __getPostById = createAsyncThunk('getPostById', async (payload, thunkAPI) => {
+  try {
+    const response = await postApi.getById(payload.postId);
+    return thunkAPI.fulfillWithValue(response.data);
+  } catch (e) {
+    return thunkAPI.rejectWithValue(e);
+  }
+});
+
+export const __deletePostById = createAsyncThunk('deletePost', async (payload, thunkAPI) => {
+  try {
+    await postApi.deleteById(payload.postId);
+    return thunkAPI.fulfillWithValue(payload);
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error);
+  }
+});
+
 export const postSlice = createSlice({
   name: 'posts',
   initialState,
   reducers: {
-    login: state => {
-      state.isLogined = true;
+    initUpdateSuccess: state => {
+      state.updateSuccess = false;
+      state.error = null;
     },
-    logout: state => {
-      state.user = null;
-      state.isLogined = false;
+    initDeleteSuccess: state => {
+      state.deleteSuccess = false;
+      state.error = null;
+    },
+    clearError: state => {
+      state.error = null;
     },
   },
   extraReducers: {
@@ -41,9 +65,28 @@ export const postSlice = createSlice({
       state.isLoading = false;
       state.error = action.payload;
     },
+    [__getPostById.pending]: state => {
+      state.isLoading = true;
+    },
+    [__getPostById.fulfilled]: (state, action) => {
+      state.isLoading = false;
+      state.post = action.payload;
+    },
+    [__getPostById.rejected]: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    [__deletePostById.fulfilled]: state => {
+      state.isLoading = false;
+      state.deleteSuccess = true;
+    },
+    [__deletePostById.rejected]: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+      state.deleteSuccess = false;
+    },
   },
 });
 
-// export const {  } = postSlice.actions;
-
+export const { initUpdateSuccess, initDeleteSuccess, clearError } = postSlice.actions;
 export default postSlice;

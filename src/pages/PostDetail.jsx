@@ -1,7 +1,8 @@
-import React from "react";
+import React from 'react';
+import Comments from '../components/common/Comments';
 
 const PostDetail = () => {
-  return <div>PostDetail</div>;
+  return <Comments />;
 };
 
 export default PostDetail;

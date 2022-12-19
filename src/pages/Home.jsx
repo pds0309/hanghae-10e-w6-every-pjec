@@ -6,7 +6,7 @@ const Home = () => {
   const [postList, setPostList] = useState('');
 
   const fetchTodos = async () => {
-    const { data } = await axios.get('http://localhost:3001/posts');
+    const { data } = await axios.get('http://localhost:3001/postList');
     setPostList(data); // 서버로부터 fetching한 데이터를 useState의 state로 set 합니다.
   };
   // 생성한 함수를 컴포넌트가 mount 됐을 떄 실행하기 위해 useEffect를 사용합니다.

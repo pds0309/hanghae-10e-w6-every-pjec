@@ -1,13 +1,13 @@
 export const USER_VALIDATION = Object.freeze({
   LOGIN_ID: {
-    SUCCESS: '사용 가능한 아이디입니다.',
+    SUCCESS: '아이디 중복을 확인하세요!',
     WARNING: 'ID는 영문 대문자, 소문자, 숫자를 포함하며, 4자 이상 12자 이하여야합니다.',
-    REGEX: /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])[A-Za-z0-9]{4,}$/,
+    REGEX: /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])[A-Za-z0-9]{4,12}$/,
   },
   NICKNAME: {
-    SUCCESS: '사용 가능한 닉네임입니다.',
+    SUCCESS: '닉네임 중복을 확인하세요!',
     WARNING: '닉네임은 4자 이상 12자 이하여야합니다.',
-    REGEX: /^[a-zA-Z0-9가-힣]{4,12}/g,
+    REGEX: /^[a-zA-Z0-9가-힣]{4,12}$/,
   },
   PASSWORD: {
     SUCCESS: '사용 가능한 비밀번호입니다.',

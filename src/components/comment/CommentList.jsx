@@ -12,7 +12,7 @@ import Comment from './Comment';
 const CommentList = ({ postId }) => {
   const dispatch = useDispatch();
   const user = useSelector(state => state.user);
-  const data = useSelector(state => state.comments.comments);
+  const comments = useSelector(state => state.comments.comments);
 
   const [comment, setComment] = useState('');
 
@@ -39,7 +39,7 @@ const CommentList = ({ postId }) => {
   return (
     <Wrap>
       <CommentTitle>
-        댓글 목록(<span>3</span>)
+        댓글 목록(<span>{comments.length}</span>)
       </CommentTitle>
       <DivideLine />
       <CommentTextarea
@@ -52,9 +52,9 @@ const CommentList = ({ postId }) => {
       </Button>
       <div>
         <Comment />
-        {data ? (
+        {comments ? (
           <>
-            {data.map(e => {
+            {comments.map(e => {
               return <Comment key={e.commentId} commentInfo={e} userInfo={user} />;
             })}
           </>

@@ -47,9 +47,7 @@ const Comment = ({ commentInfo, userInfo }) => {
             <ProfileImage imageUrl={commentInfo.image ? commentInfo.image : userInfo.user.image} />
             <TwinInfoBox
               leftContent={commentInfo.nickname ? commentInfo.nickname : userInfo.user.nickname}
-              rightContent={
-                commentInfo.createdAt.slice(0, 10) + ' ' + commentInfo.createdAt.slice(11, 16)
-              }
+              rightContent={commentInfo.createdAt}
               style={{ marginBottom: '-6px' }}
             />
           </UserWrap>

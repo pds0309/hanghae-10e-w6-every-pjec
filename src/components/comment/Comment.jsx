@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { __editComment, __deleteComment } from '../../redux/modules/CommentSlice';
 
 import styled from 'styled-components';
+import ProfileImage from '../common/ProfileImage';
 import Label from '../common/Label';
 import DivideLine from '../common/DivideLine';
 
@@ -43,13 +44,11 @@ const Comment = ({ commentInfo, userInfo }) => {
       <div>
         <TopWrap>
           <UserWrap>
-            <span>image</span>
+            <ProfileImage imageUrl={commentInfo.image ? commentInfo.image : userInfo.user.image} />
             <Label>{commentInfo.nickname ? commentInfo.nickname : userInfo.user.nickname}</Label>
             <Label>|</Label>
             <Label>
-              {commentInfo.createdAt
-                ? commentInfo.createdAt.slice(0, 10) + ' ' + commentInfo.createdAt.slice(11, 16)
-                : new Date().toISOString().slice(0, 10) + ' ' + commentInfo.createdAt.slice(11, 16)}
+              {commentInfo.createdAt.slice(0, 10) + ' ' + commentInfo.createdAt.slice(11, 16)}
             </Label>
           </UserWrap>
           {userInfo.user.userId === commentInfo.userId && (

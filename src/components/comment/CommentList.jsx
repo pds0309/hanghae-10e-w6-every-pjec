@@ -21,8 +21,7 @@ const CommentList = ({ postId }) => {
       if (user) {
         const userId = user.user.userId;
         dispatch(__postComment({ postId, comment, userId }));
-        // return setComment('');
-        return window.location.reload();
+        return setComment('');
       }
       alert('로그인 해주세요.');
     }

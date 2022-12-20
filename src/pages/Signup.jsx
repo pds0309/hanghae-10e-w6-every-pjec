@@ -68,7 +68,6 @@ const Signup = () => {
   };
 
   const handleBlurLoginId = useCallback(() => {
-    console.log(loginId);
     if (!loginIdValidation.isInputValidated) {
       return;
     }
@@ -100,11 +99,11 @@ const Signup = () => {
           password,
           pwconfirm,
         });
+        navigate('/signin');
       } catch (e) {
         alert(e);
       }
     }
-    navigate('/signin');
   };
 
   return (

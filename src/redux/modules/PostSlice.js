@@ -13,7 +13,7 @@ const initialState = {
 export const __getAllPosts = createAsyncThunk('getPosts', async (_, thunkAPI) => {
   try {
     const result = await postApi.getAll();
-    return thunkAPI.fulfillWithValue(result.data);
+    return thunkAPI.fulfillWithValue(result.data?.postList ?? result.data);
   } catch (e) {
     return thunkAPI.rejectWithValue(e);
   }

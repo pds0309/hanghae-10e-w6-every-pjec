@@ -11,6 +11,15 @@ export const __postComment = createAsyncThunk('postComment', async (payload, thu
   }
 });
 
+export const __fetchComments = createAsyncThunk('fetchComments', async (payload, thunkAPI) => {
+  try {
+    const { data } = await commentApi.getAllForPost(payload);
+    return thunkAPI.fulfillWithValue(data);
+  } catch (e) {
+    return thunkAPI.rejectWithValue(e);
+  }
+});
+
 const initialState = {
   comments: [
     {
@@ -31,11 +40,19 @@ const CommentSlice = createSlice({
   extraReducers: {
     [__postComment.fulfilled]: (state, action) => {
       state.isLoading = false;
-      //나머지 속성 채우기
       state.comments = [action.payload, ...state.comments];
-      console.log(state.comments);
+      //다른 속성도 채우기
     },
     [__postComment.rejected]: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    [__fetchComments.fulfilled]: (state, action) => {
+      state.isLoading = false;
+      state = { ...state, comments: action.payload };
+      console.log(state);
+    },
+    [__fetchComments.rejected]: (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
     },

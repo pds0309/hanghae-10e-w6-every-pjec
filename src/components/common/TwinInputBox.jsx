@@ -12,15 +12,16 @@ const TwinInputBox = ({ leftContent, rightContent, ...props }) => {
 
 const StyledDiv = styled.div`
   display: flex;
-  justify-content: center;
-  margin-left: 32px;
+  justify-content: left;
   color: ${Colors.grey};
 `;
 
-const Content = styled.p`
+const Content = styled.div`
+  display: block;
+  margin: 15px 0 15px 0;
   font-weight: 600;
   width: 400px;
-  height: 30px;
+  height: 20px;
 `;
 
 export default TwinInputBox;

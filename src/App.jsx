@@ -3,6 +3,7 @@ function App() {
   return (
     <>
       <Router />
+      <div style={{ height: '120px' }}>&nbsp;</div>
     </>
   );
 }

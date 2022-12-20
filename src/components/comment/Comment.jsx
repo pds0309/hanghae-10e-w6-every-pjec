@@ -1,11 +1,59 @@
+// import React, { memo, useState } from 'react';
+// import { useDispatch } from 'react-redux';
+import styled from 'styled-components';
+import Label from '../common/Label';
+import DivideLine from '../common/DivideLine';
+
 const Comment = () => {
   // console.log(comment);
   // console.log(user);
-  return <div>넘어왔다</div>;
+  return (
+    <div>
+      <TopWrap>
+        <UserWrap>
+          <span>image</span>
+          <Label>nickname</Label>
+          <Label>|</Label>
+          <Label>date</Label>
+        </UserWrap>
+        <ButtonWrap>
+          <Button>수정하기</Button>
+          <Button>삭제하기</Button>
+        </ButtonWrap>
+      </TopWrap>
+      <CommentBox>comment</CommentBox>
+      <DivideLine />
+    </div>
+  );
 };
+const UserWrap = styled.div`
+  display: flex;
+`;
 
-// import React, { memo, useState } from 'react';
-// import { useDispatch } from 'react-redux';
+const ButtonWrap = styled.div`
+  display: flex;
+`;
+
+const Button = styled.div`
+  font-size: small;
+  text-decoration: underline;
+  color: #6d7d8b;
+  border: none;
+  background-color: transparent;
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
+`;
+
+const TopWrap = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const CommentBox = styled.div`
+  height: 100px;
+  margin: 10px 0px 20px 0px;
+`;
 
 // const Comment = memo(({comment, user}}) => {
 //   const dispatch = useDispatch();

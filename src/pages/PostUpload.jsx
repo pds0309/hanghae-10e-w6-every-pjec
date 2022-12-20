@@ -3,99 +3,104 @@ import styled from 'styled-components';
 import Label from '../components/common/Label';
 import Button from '../components/common/Button';
 import Input from '../components/common/Input';
+import DivideLine from '../components/common/DivideLine';
+import TwinInputBox from '../components/common/TwinInputBox';
+import Select from '../components/common/Select';
 
 const Postupload = () => {
   return (
-    <div>
-      <Wrap>모집 기본 정보 입력</Wrap>
-      <h1></h1>
-      <TopLine></TopLine>
-      <Warp2>
-        <WarpBox>
-          <Label>모집구분</Label>
-          <Input width="330px" height="50px" placeholder="프로젝트" />
-          <Label>진행방식</Label>
-          <Input width="330px" height="50px" placeholder="온라인" />
-        </WarpBox>
-        <WarpBox>
-          <Label>모집인원</Label>
-          <Input width="330px" height="50px" placeholder="인원을 입력하세요" />
-          <Label>진행기간</Label>
-          <Input width="330px" height="50px" placeholder="1개월 미만" />
-        </WarpBox>
-        <WarpBox>
-          <Label>시작예정일</Label>
-          <Input width="330px" height="50px" type="date" placeholder="온라인" />
-          <Label>진행기간</Label>
-          <Input width="330px" height="50px" placeholder="1개월 미만" />
-        </WarpBox>
-        <WarpBox>
-          <Label>기술스택</Label>
-          <Input width="330px" height="50px" placeholder="1개월 JavaScript" />
-        </WarpBox>
-      </Warp2>
-      <div>
-        <Wrap>상세 정보 입력</Wrap>
-        <h1></h1>
-        <TopLine></TopLine>
-        <WarpBox>
-          <Warp2>
-            <Label>제목</Label>
-            <Input width="730px" height="54px" placeholder="제목을 입력하세요" />
-          </Warp2>
-        </WarpBox>
-        <WarpBox>
-          <Warp2>
-            <Input width="730px" height="40px" />
-            <Input width="730px" height="434.64px" placeholder="내용을 입력하세요" />
-          </Warp2>
-        </WarpBox>
-      </div>
+    <Wrap>
+      <SectionWrap>
+        <h2>모집 기본 정보 입력</h2>
+        <DivideLine />
+        <TwinInputBox leftContent={<Label>모집구분</Label>} rightContent={''} />
+        <TwinInputBox
+          leftContent={<Select style={{ width: '330px', height: '50px' }} placeholder="프로젝트" />}
+          rightContent={''}
+        />
+        <br />
+        <TwinInputBox
+          leftContent={<Label>진행방식</Label>}
+          rightContent={<Label>진행기간</Label>}
+        />
+        <TwinInputBox
+          leftContent={<Select style={{ width: '330px', height: '50px' }} placeholder="온라인" />}
+          rightContent={
+            <Select style={{ width: '330px', height: '50px' }} placeholder="1개월 미만" />
+          }
+        />
+        <br />
+        <TwinInputBox
+          leftContent={<Label>시작예정일</Label>}
+          rightContent={<Label>진행기간</Label>}
+        />
+        <TwinInputBox
+          leftContent={
+            <Select
+              style={{ width: '330px', height: '50px' }}
+              type="date"
+              placeholder="1개월 미만"
+            />
+          }
+          rightContent={
+            <Select style={{ width: '330px', height: '50px' }} placeholder="1개월 미만" />
+          }
+        />
+      </SectionWrap>
+      <br />
+      <br />
+      <br />
+      <SectionWrap>
+        <h2>상세 정보 입력</h2>
+        <DivideLine />
+        <Label>제목</Label>
+        <Input
+          style={{ marginTop: '10px', marginBottom: '30px' }}
+          width="730px"
+          height="30px"
+          placeholder="제목을 입력하세요"
+        />
+        <Label>내용</Label>
+        <TextBox placeholder="내용을 입력하세요" />
+      </SectionWrap>
       <ButtonWrap>
-        <Button style={{ width: '100px', height: '50px' }}>등록하기</Button>
-        <Button style={{ width: '100px', height: '50px' }}>뒤로가기</Button>
+        <Button>등록하기</Button>
+        <Button style={{ marginLeft: '30px' }} btnTheme={'secondary'}>
+          뒤로가기
+        </Button>
       </ButtonWrap>
-    </div>
+    </Wrap>
   );
 };
 
 const Wrap = styled.div`
   display: flex;
-  margin-left: 338px;
-  margin-top: 100px;
-  font-family: 'IBM Plex Sans KR';
-  font-style: normal;
-  font-weight: 600;
-  font-size: 24px;
-  line-height: 36px;
-  /* identical to box height */
-
-  color: #000000;
+  flex-direction: column;
+  align-items: center;
 `;
-const TopLine = styled.div`
+
+const SectionWrap = styled.div`
   width: 764px;
-  height: 1px;
-  top: 1px;
-  background: #bbc8d4;
-  margin-left: 338px;
-  transform: matrix(1, 0, 0, -1, 0, 0);
 `;
 
-const Warp2 = styled.div`
-  margin-left: 320px;
+const TextBox = styled.textarea`
+  ::placeholder {
+    font-weight: 100;
+  }
+  font-size: 16px;
+  font-weight: 600;
+  width: -webkit-fill-available;
+  height: 700px;
+  border: 1px solid #bbc8d4;
+  border-radius: 6px;
+  padding: 20px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  resize: none;
 `;
+
 const ButtonWrap = styled.div`
-  padding-top: 20px;
-  display: flex;
-  flex-direction: row;
-  margin-left: 338px;
-`;
-
-const WarpBox = styled.div`
-  margin: auto;
-  margin-top: 20px;
-  display: inline-block;
-  margin-left: 20px;
+  margin-right: 43%;
 `;
 
 export default Postupload;

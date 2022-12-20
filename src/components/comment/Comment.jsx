@@ -4,8 +4,8 @@ import { __editComment, __deleteComment } from '../../redux/modules/CommentSlice
 
 import styled from 'styled-components';
 import ProfileImage from '../common/ProfileImage';
-import Label from '../common/Label';
 import DivideLine from '../common/DivideLine';
+import TwinInfoBox from '../common/TwinInfoBox';
 
 const Comment = ({ commentInfo, userInfo }) => {
   const dispatch = useDispatch();
@@ -45,11 +45,13 @@ const Comment = ({ commentInfo, userInfo }) => {
         <TopWrap>
           <UserWrap>
             <ProfileImage imageUrl={commentInfo.image ? commentInfo.image : userInfo.user.image} />
-            <Label>{commentInfo.nickname ? commentInfo.nickname : userInfo.user.nickname}</Label>
-            <Label>|</Label>
-            <Label>
-              {commentInfo.createdAt.slice(0, 10) + ' ' + commentInfo.createdAt.slice(11, 16)}
-            </Label>
+            <TwinInfoBox
+              leftContent={commentInfo.nickname ? commentInfo.nickname : userInfo.user.nickname}
+              rightContent={
+                commentInfo.createdAt.slice(0, 10) + ' ' + commentInfo.createdAt.slice(11, 16)
+              }
+              style={{ marginBottom: '-6px' }}
+            />
           </UserWrap>
           {userInfo.user.userId === commentInfo.userId && (
             <ButtonWrap>
@@ -80,6 +82,9 @@ const Comment = ({ commentInfo, userInfo }) => {
 
 const UserWrap = styled.div`
   display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  grid-column-gap: 9px;
 `;
 
 const ButtonWrap = styled.div`
@@ -111,8 +116,8 @@ const EditTextarea = styled.textarea`
   font-size: 16px;
   font-weight: 600;
   width: -webkit-fill-available;
-  height: 77px;
-  border: 2px solid #bbc8d4;
+  height: 55px;
+  border: 1px solid #bbc8d4;
   border-radius: 4px;
   padding: 20px;
   margin: 10px 0px 0px 0px;

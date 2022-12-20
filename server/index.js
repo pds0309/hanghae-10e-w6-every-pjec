@@ -67,7 +67,7 @@ server.get('/posts', (req, res) => {
   return res.jsonp(
     posts.map(post => {
       const { userId, nickname, image } = router.db.__wrapped__.user.find(
-        user => user.userId === post.postId,
+        user => user.userId === post.userId,
       );
       return { ...post, userId, nickname, image };
     }),
@@ -78,7 +78,7 @@ server.get('/posts', (req, res) => {
 server.get('/posts/:postId', (req, res) => {
   const { postId } = req.params;
   const response = router.db.__wrapped__.posts.find(post => post.postId === parseInt(postId, 10));
-  const user = router.db.__wrapped__.user.find(user => user.userId === response?.postId);
+  const user = router.db.__wrapped__.user.find(user => user.userId === response?.userId);
   return response && user
     ? res.jsonp({ ...response, nickname: user.nickname, image: user.image })
     : res.status(404).send({ message: '해당 데이터를 찾을 수 없습니다' });

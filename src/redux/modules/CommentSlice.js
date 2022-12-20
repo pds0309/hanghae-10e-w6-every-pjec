@@ -49,7 +49,7 @@ const CommentSlice = createSlice({
     },
     [__fetchComments.fulfilled]: (state, action) => {
       state.isLoading = false;
-      state = { ...state, comments: action.payload };
+      state.comments = action.payload;
       console.log(state);
     },
     [__fetchComments.rejected]: (state, action) => {

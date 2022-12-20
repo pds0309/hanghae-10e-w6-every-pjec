@@ -8,7 +8,7 @@ const initialState = {
   isLogined: false,
 };
 
-export const __getMyProfile = createAsyncThunk('fetchComments', async (_, thunkAPI) => {
+export const __getMyProfile = createAsyncThunk('getProfile', async (_, thunkAPI) => {
   try {
     const { data } = await userApi.me();
     return thunkAPI.fulfillWithValue(data);

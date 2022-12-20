@@ -105,7 +105,8 @@ server.use((req, res, next) => {
     const currentDomain = reqSplit[0];
     if (currentDomain === 'comments') {
       req.url = '/comments';
-      req.body['postId'] = reqSplit[1];
+      req.body['postId'] = parseInt(reqSplit[1]);
+      req.body['userId'] = parseInt(req.headers.authorization.split(' ')[1]);
     }
     const currentTable = router.db.__wrapped__[currentDomain];
     const currentIdFormat = currentDomain.endsWith('s')

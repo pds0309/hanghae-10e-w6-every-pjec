@@ -1,30 +1,32 @@
 import React, { useState, useLayoutEffect } from 'react';
-// import { __postComment, __fetchComments } from '../../redux/modules/CommentSlice';
-import { __fetchComments } from '../../redux/modules/CommentSlice';
+import { __postComment, __fetchComments } from '../../redux/modules/CommentSlice';
 
 import { useDispatch, useSelector } from 'react-redux';
-// import { useDispatch } from 'react-redux';
 
 import styled from 'styled-components';
 import DivideLine from '../common/DivideLine';
-// import Button from '../common/Button';
+import Button from '../common/Button';
 
-// import Comment from './Comment';
+import Comment from './Comment';
 
 const CommentList = ({ postId }) => {
   const dispatch = useDispatch();
-  // const user = useSelector(state => state.user.user);
+  const user = useSelector(state => state.user);
   const data = useSelector(state => state.comments.comments);
-  console.log(data);
+
   const [comment, setComment] = useState('');
 
-  // const postComment = () => {
-  //   if (user) {
-  //     dispatch(__postComment({ postId, comment }));
-  //     return setComment('');
-  //   }
-  //   alert('로그인 해주세요.');
-  // };
+  const postComment = () => {
+    if (comment) {
+      if (user) {
+        const userId = user.user.userId;
+        dispatch(__postComment({ postId, comment, userId }));
+        // return setComment('');
+        return window.location.reload();
+      }
+      alert('로그인 해주세요.');
+    }
+  };
 
   const onChangeComment = e => {
     setComment(e.target.value);
@@ -45,15 +47,20 @@ const CommentList = ({ postId }) => {
         value={comment}
         onChange={onChangeComment}
       ></CommentTextarea>
-      {/* <Button onClick={postComment}>댓글 등록</Button> */}
+      <Button style={{ marginBottom: '20px' }} onClick={postComment}>
+        댓글 등록
+      </Button>
       <div>
-        {/* {
+        <Comment />
+        {data ? (
           <>
             {data.map(e => {
-              return <Comment key={e.commentId} comment={e} user={user} />;
+              return <Comment key={e.commentId} commentInfo={e} userInfo={user} />;
             })}
           </>
-        } */}
+        ) : (
+          <></>
+        )}
       </div>
     </Wrap>
   );

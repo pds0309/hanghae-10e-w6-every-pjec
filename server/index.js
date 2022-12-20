@@ -123,6 +123,15 @@ server.use((req, res, next) => {
   if (req.method.toString() === 'PUT' || req.method.toString() === 'DELETE') {
     validAuthentication(req, res);
   }
+  if (req.method.toString() === 'PUT') {
+    const [currentDomain, id] = req.originalUrl.substring(1).split('/');
+    if (currentDomain !== 'user') {
+      const domainById = router.db.__wrapped__[currentDomain].find(
+        domain => domain[currentDomain.substring(0, domain.length - 1) + 'id'] == id,
+      );
+      req.body = { ...domainById, ...req.body };
+    }
+  }
   next();
 });
 

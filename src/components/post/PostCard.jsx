@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { Colors } from '../../styles';
+import { getFormattedDate } from '../../utils/dateHandler';
 import ProfileImage from '../common/ProfileImage';
 import TwinInfoBox from '../common/TwinInfoBox';
 
@@ -23,7 +24,10 @@ const PostCard = ({ post }) => {
           <ProfileImage imageUrl={post.image} />
           <div style={{ marginTop: '3px' }}>{post.nickname}</div>
         </div>
-        <TwinInfoBox leftContent="시작일" rightContent={post.startDate} />
+        <TwinInfoBox
+          leftContent="시작일"
+          rightContent={getFormattedDate(post.startDate).split(' ')[0]}
+        />
       </WriterInfoContainer>
     </CardWrap>
   );

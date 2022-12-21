@@ -9,6 +9,7 @@ import {
   __deletePostById,
   __getPostById,
 } from '../../redux/modules/PostSlice';
+import { getFormattedDate } from '../../utils/dateHandler';
 import DivideLine from '../common/DivideLine';
 import ProfileImage from '../common/ProfileImage';
 import TwinInfoBox from '../common/TwinInfoBox';
@@ -82,7 +83,7 @@ const PostThread = ({ postId }) => {
               <ProfileImage imageUrl={post.iamge} />
               <TwinInfoBox
                 leftContent={post.nickname}
-                rightContent={post.createdAt}
+                rightContent={getFormattedDate(post.createdAt)}
                 style={{ marginBottom: '-6px' }}
               />
             </WriterBox>

@@ -21,8 +21,8 @@ export const __getAllPosts = createAsyncThunk('getPosts', async (_, thunkAPI) =>
 
 export const __getPostById = createAsyncThunk('getPostById', async (payload, thunkAPI) => {
   try {
-    const response = await postApi.getById(payload.postId);
-    return thunkAPI.fulfillWithValue(response.data);
+    const result = await postApi.getById(payload.postId);
+    return thunkAPI.fulfillWithValue(result.data?.postOne ?? result.data);
   } catch (e) {
     return thunkAPI.rejectWithValue(e);
   }

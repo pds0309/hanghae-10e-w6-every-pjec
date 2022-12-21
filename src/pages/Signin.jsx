@@ -24,9 +24,10 @@ const Signin = () => {
       userApi
         .login({ loginId, password })
         .then(res => {
-          const { accessToken, refreshToken } = res.data;
-          localStorage.setItem('accessToken', accessToken);
-          localStorage.setItem('refreshToken', refreshToken);
+          const { authorization } = res.data;
+          const tokens = authorization.split('%');
+          localStorage.setItem('accessToken', tokens[1]);
+          localStorage.setItem('refreshToken', tokens[2]);
           localStorage.setItem('isLogined', true);
           dispatch(login());
           navigation('/');

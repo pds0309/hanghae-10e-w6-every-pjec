@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
@@ -24,6 +24,10 @@ const Header = ({ user, isLogined }) => {
     dispatch(logout());
   };
 
+  const handleCloseMyBoxVisible = useCallback(() => {
+    setMyBoxVisible(false);
+  }, []);
+
   const UnAuthSectionContents = () => {
     return (
       <>
@@ -36,7 +40,6 @@ const Header = ({ user, isLogined }) => {
   const AuthSectionContents = () => {
     return (
       <>
-        {/* TODO: 인증 상태 시 헤더바 UI/기능 완성하기 */}
         <HeaderLink to="postupload">모집글 작성</HeaderLink>
         <div style={{ display: 'flex', gridColumnGap: '8px' }}>
           <div>
@@ -56,7 +59,7 @@ const Header = ({ user, isLogined }) => {
                 fill="#6D7D8B"
               />
             </svg>
-            <SelectBox visible={myBoxVisible}>
+            <SelectBox visible={myBoxVisible} onClose={handleCloseMyBoxVisible}>
               <MyBoxLink to="profile">내 정보</MyBoxLink>
               <MyBoxLink to="/post">내 작성글</MyBoxLink>
               <MyBoxLink to="/" onClick={handleLogoutClick}>

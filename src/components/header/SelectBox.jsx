@@ -1,10 +1,14 @@
 import styled from 'styled-components';
+import useClickAway from '../../hooks/useClickAway';
 import { Colors } from '../../styles';
 
-const SelectBox = ({ visible, children, location = -30 }) => {
+const SelectBox = ({ visible, onClose, children, location = -30 }) => {
+  const { ref } = useClickAway(onClose);
   return (
     <Wrapper style={{ display: visible ? 'block' : 'none' }}>
-      <Box location={location}>{children}</Box>
+      <Box ref={ref} location={location}>
+        {children}
+      </Box>
     </Wrapper>
   );
 };

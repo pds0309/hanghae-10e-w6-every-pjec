@@ -7,12 +7,14 @@ import { __getAllPosts } from '../redux/modules/PostSlice';
 
 const Post = () => {
   const dispatch = useDispatch();
+  const user = useSelector(state => state.user.user);
   const { posts } = useSelector(state => state.posts);
-  const [postList, setPostList] = useState([]);
+  const myPosts = posts.filter(post => post.userId === user.userId);
+  const [myPostList, setMyPostList] = useState([]);
 
   useEffect(() => {
-    if (posts) {
-      setPostList(posts);
+    if (myPosts) {
+      setMyPostList(myPosts);
     }
   }, [posts]);
 
@@ -22,8 +24,9 @@ const Post = () => {
 
   // 임시필터링 함수
   const getPostFilteredBy = param => {
-    setPostList(posts.filter(post => post.division === param));
+    setMyPostList(myPosts.filter(post => post.division === param));
   };
+
   return (
     <Wrap>
       <Title>내 작성글</Title>
@@ -36,7 +39,7 @@ const Post = () => {
         ]}
       />
       <CardListContainer>
-        {posts && postList.map(post => <PostCard key={post.postId} post={post} />)}
+        {posts && myPostList.map(post => <PostCard key={post.postId} post={post} />)}
       </CardListContainer>
     </Wrap>
   );

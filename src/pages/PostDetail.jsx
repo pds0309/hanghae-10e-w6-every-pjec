@@ -1,6 +1,6 @@
 import React from 'react';
-import Comments from '../components/comment/Comments';
 import { useParams } from 'react-router-dom';
+import CommentList from '../components/comment/CommentList';
 
 import PostThread from '../components/post/PostThread';
 
@@ -9,7 +9,7 @@ const PostDetail = () => {
   return (
     <>
       <PostThread postId={id} />
-      <Comments postId={id} />
+      <CommentList postId={id} />
     </>
   );
 };

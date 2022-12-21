@@ -5,10 +5,10 @@ const initialState = {
   user: null,
   isLoading: false,
   error: null,
-  isLogined: false,
+  isLogined: localStorage.getItem('isLogined'),
 };
 
-export const __getMyProfile = createAsyncThunk('fetchComments', async (_, thunkAPI) => {
+export const __getMyProfile = createAsyncThunk('getProfile', async (_, thunkAPI) => {
   try {
     const { data } = await userApi.me();
     return thunkAPI.fulfillWithValue(data);

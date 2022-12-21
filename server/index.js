@@ -105,7 +105,8 @@ server.use((req, res, next) => {
     const currentDomain = reqSplit[0];
     if (currentDomain === 'comments') {
       req.url = '/comments';
-      req.body['postId'] = reqSplit[1];
+      req.body['postId'] = parseInt(reqSplit[1]);
+      req.body['userId'] = parseInt(req.headers.authorization.split(' ')[1]);
     }
     const currentTable = router.db.__wrapped__[currentDomain];
     const currentIdFormat = currentDomain.endsWith('s')
@@ -121,6 +122,15 @@ server.use((req, res, next) => {
 server.use((req, res, next) => {
   if (req.method.toString() === 'PUT' || req.method.toString() === 'DELETE') {
     validAuthentication(req, res);
+  }
+  if (req.method.toString() === 'PUT') {
+    const [currentDomain, id] = req.originalUrl.substring(1).split('/');
+    if (currentDomain !== 'user') {
+      const domainById = router.db.__wrapped__[currentDomain].find(
+        domain => domain[currentDomain.substring(0, domain.length - 1) + 'id'] == id,
+      );
+      req.body = { ...domainById, ...req.body };
+    }
   }
   next();
 });

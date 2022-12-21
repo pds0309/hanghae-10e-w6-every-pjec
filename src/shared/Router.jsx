@@ -10,6 +10,7 @@ import Signup from '../pages/Signup';
 import BookMark from '../pages/BookMark';
 import { useSelector } from 'react-redux';
 import Header from '../components/common/Header';
+import PostUpdate from '../pages/PostUpdate';
 
 const Router = () => {
   const { user, isLogined } = useSelector(state => state.user);
@@ -21,6 +22,7 @@ const Router = () => {
         <Route path="post" element={<Post />} />
         <Route path="postdetail/:id" element={<PostDetail />} />
         <Route path="postupload" element={isLogined ? <PostUpload /> : <Navigate to="/" />} />
+        <Route path="postupdate/:id" element={isLogined ? <PostUpdate /> : <Navigate to="/" />} />
         <Route path="profile" element={isLogined ? <Profile /> : <Navigate to="/" />} />
         <Route path="signin" element={!isLogined ? <Signin /> : <Navigate to="/" />} />
         <Route path="signup" element={!isLogined ? <Signup /> : <Navigate to="/" />} />

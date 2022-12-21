@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import userApi from '.././apis/userApi';
 
 import { useNavigate } from 'react-router-dom';
@@ -32,12 +32,59 @@ const Signup = () => {
     password,
   );
 
+  const [nicknameDuplicated, setNicknameDuplicated] = useState({
+    status: false,
+    message: '',
+  });
+  const [loginIdDuplicated, setLoginIdDuplicated] = useState({
+    status: false,
+    message: '',
+  });
+
+  useEffect(() => {
+    setNicknameDuplicated({
+      status: false,
+      message: '',
+    });
+  }, [nickname]);
+
+  useEffect(() => {
+    setLoginIdDuplicated({
+      status: false,
+      message: '',
+    });
+  }, [loginId]);
+
+  //TODO: 동일한 인풋에 대한 요청일 때 메모이제이션 해서 함수 호출 막기
+
+  const handleBlurNickname = () => {
+    if (!nicknameValidation.isInputValidated) {
+      return;
+    }
+    userApi
+      .validateNickname(nickname)
+      .then(res => setNicknameDuplicated({ status: true, message: res.data.message }))
+      .catch(err => setNicknameDuplicated({ status: false, message: err.errorMessage }));
+  };
+
+  const handleBlurLoginId = useCallback(() => {
+    if (!loginIdValidation.isInputValidated) {
+      return;
+    }
+    userApi
+      .validateLoginId(loginId)
+      .then(res => setLoginIdDuplicated({ status: true, message: res.data.message }))
+      .catch(err => setLoginIdDuplicated({ status: false, message: err.errorMessage }));
+  }, [loginId]);
+
   const checkInputValidated = () => {
     return (
       loginIdValidation.isInputValidated &&
       nicknameValidation.isInputValidated &&
       passwordValidation.isInputValidated &&
-      pwConfirmValidation.isInputValidated
+      pwConfirmValidation.isInputValidated &&
+      nicknameDuplicated.status &&
+      loginIdDuplicated.status
     );
   };
 
@@ -52,11 +99,11 @@ const Signup = () => {
           password,
           pwconfirm,
         });
+        navigate('/signin');
       } catch (e) {
         alert(e);
       }
     }
-    navigate('/signin');
   };
 
   return (
@@ -72,11 +119,16 @@ const Signup = () => {
           placeholder="ID를 입력하세요."
           value={loginId}
           onChange={handleChangeLoginId}
+          onBlur={handleBlurLoginId}
           autoFocus
           required
         />
-        <ValidationText isValidationSuccess={loginIdValidation.isInputValidated}>
-          {loginIdValidation.message}
+        <ValidationText
+          isValidationSuccess={loginIdValidation.isInputValidated && loginIdDuplicated.status}
+        >
+          {!loginIdValidation.isInputValidated
+            ? loginIdValidation.message
+            : loginIdDuplicated.message || loginIdValidation.message}
         </ValidationText>
         <Label>닉네임</Label>
         <Input
@@ -85,10 +137,15 @@ const Signup = () => {
           placeholder="닉네임을 입력하세요."
           value={nickname}
           onChange={handleChangeNickname}
+          onBlur={handleBlurNickname}
           required
         />
-        <ValidationText isValidationSuccess={nicknameValidation.isInputValidated}>
-          {nicknameValidation.message}
+        <ValidationText
+          isValidationSuccess={nicknameValidation.isInputValidated && nicknameDuplicated.status}
+        >
+          {!nicknameValidation.isInputValidated
+            ? nicknameValidation.message
+            : nicknameDuplicated.message || nicknameValidation.message}
         </ValidationText>
         <Label>비밀번호</Label>
         <Input

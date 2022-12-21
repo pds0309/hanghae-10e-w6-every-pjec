@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { __postComment } from '../../redux/modules/CommentSlice';
+import React, { useState, useLayoutEffect } from 'react';
+import { __postComment, __fetchComments } from '../../redux/modules/CommentSlice';
 
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -7,28 +7,38 @@ import styled from 'styled-components';
 import DivideLine from '../common/DivideLine';
 import Button from '../common/Button';
 
-const Comments = ({ postId }) => {
+import Comment from './Comment';
+
+const CommentList = ({ postId }) => {
   const dispatch = useDispatch();
   const user = useSelector(state => state.user.user);
+  const comments = useSelector(state => state.comments.comments);
 
   const [comment, setComment] = useState('');
 
   const postComment = () => {
-    if (user) {
-      dispatch(__postComment({ postId, comment }));
-      return setComment('');
+    if (comment) {
+      if (user) {
+        const userId = user.userId;
+        dispatch(__postComment({ postId, comment, userId }));
+        return setComment('');
+      }
+      alert('로그인 해주세요.');
     }
-    alert('로그인 해주세요.');
   };
 
   const onChangeComment = e => {
     setComment(e.target.value);
   };
-  // 댓글 개수 조회해서 숫자 바뀌게 하기 추가
+
+  useLayoutEffect(() => {
+    dispatch(__fetchComments(postId));
+  }, [dispatch, postId]);
+
   return (
     <Wrap>
       <CommentTitle>
-        댓글 목록(<span>3</span>)
+        댓글 목록(<span>{comments.length}</span>)
       </CommentTitle>
       <DivideLine />
       <CommentTextarea
@@ -36,7 +46,21 @@ const Comments = ({ postId }) => {
         value={comment}
         onChange={onChangeComment}
       ></CommentTextarea>
-      <Button onClick={postComment}>댓글 등록</Button>
+      <Button style={{ marginBottom: '20px' }} onClick={postComment}>
+        댓글 등록
+      </Button>
+      <div>
+        <Comment />
+        {comments ? (
+          <>
+            {comments.map(e => {
+              return <Comment key={e.commentId} commentInfo={e} userInfo={user} />;
+            })}
+          </>
+        ) : (
+          <></>
+        )}
+      </div>
     </Wrap>
   );
 };
@@ -66,4 +90,4 @@ const CommentTextarea = styled.textarea`
   resize: none;
 `;
 
-export default Comments;
+export default CommentList;

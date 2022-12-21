@@ -27,6 +27,7 @@ const Signin = () => {
           const { accessToken, refreshToken } = res.data;
           localStorage.setItem('accessToken', accessToken);
           localStorage.setItem('refreshToken', refreshToken);
+          localStorage.setItem('isLogined', true);
           dispatch(login());
           navigation('/');
         })

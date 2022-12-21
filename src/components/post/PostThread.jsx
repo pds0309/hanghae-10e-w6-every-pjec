@@ -90,7 +90,7 @@ const PostThread = ({ postId }) => {
               {user && user.userId === post.userId && (
                 <>
                   {/* TODO: 수정 페이지로 이동 */}
-                  <Link to="">수정하기</Link>
+                  <Link to={'/postupdate/' + postId}>수정하기</Link>
                   <Link to="" onClick={handlePostDeleteLink}>
                     삭제하기
                   </Link>

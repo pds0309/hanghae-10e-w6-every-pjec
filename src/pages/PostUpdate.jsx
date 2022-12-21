@@ -1,13 +1,16 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import postApi from '../apis/postApi';
 import PostSubmit from '../components/post/PostSubmit';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import postApi from '../apis/postApi';
 
-const Postupload = () => {
+const PostUpdate = () => {
+  const { id } = useParams();
+  const { post } = useSelector(state => state.posts);
   const navigate = useNavigate();
-  const postUpload = post => {
+  const postUpdate = post => {
     postApi
-      .submit({
+      .updateById(id, {
         title: post.title,
         content: post.content,
         division: post.division.value,
@@ -18,16 +21,17 @@ const Postupload = () => {
         contact: post.contact,
       })
       .then(() => {
-        alert('게시글 등록 완료!');
-        navigate('/');
+        alert('게시글 수정 완료!');
+        navigate(-1);
       })
       .catch(err => alert(err.errorMessagae));
   };
+
   return (
     <>
-      <PostSubmit post={{}} submitApi={post => postUpload(post)} pageName="등록" />
+      <PostSubmit post={post} submitApi={post => postUpdate(post)} pageName="수정" />
     </>
   );
 };
 
-export default Postupload;
+export default PostUpdate;

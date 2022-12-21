@@ -1,7 +1,13 @@
 import React, { useLayoutEffect, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
-import { __editMyNickname, __getMyProfile, __editMyStack } from '../redux/modules/UserSlice';
+import {
+  __editMyNickname,
+  __getMyProfile,
+  __editMyStack,
+  __deleteAccount,
+} from '../redux/modules/UserSlice';
 import userApi from '../apis/userApi';
 
 import useInput from '../hooks/useInput';
@@ -17,7 +23,6 @@ import Label from '../components/common/Label';
 import TwinInputBox from '../components/common/TwinInputBox';
 import DivideLine from '../components/common/DivideLine';
 import ValidationText from '../components/common/ValidationText';
-
 import Input from '../components/common/Input';
 
 const genOptionByParam = param => {
@@ -26,6 +31,7 @@ const genOptionByParam = param => {
 
 const Profile = (size = { size }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const user = useSelector(state => state.user.user);
 
   useLayoutEffect(() => {
@@ -90,6 +96,13 @@ const Profile = (size = { size }) => {
     const newStack = stack.map(st => st.value).join(',');
     dispatch(__editMyStack({ newStack }));
     handleStackToggle();
+  };
+
+  const deleteAccount = () => {
+    if (window.confirm('정말 탈퇴하시겠습니까?')) {
+      dispatch(__deleteAccount());
+      navigate('/');
+    }
   };
 
   return (
@@ -158,7 +171,7 @@ const Profile = (size = { size }) => {
         )}
       </LabelWrap>
       {!stackEditToggle ? (
-        <LowerContent>{user.stack.replaceAll(',', ', ')}</LowerContent>
+        <LowerContent>{user.stack?.replaceAll(',', ', ')}</LowerContent>
       ) : (
         <SelectWrap>
           <Selection
@@ -174,6 +187,7 @@ const Profile = (size = { size }) => {
       <DivideLine />
       <Label>회원탈퇴</Label>
       <Button
+        onClick={deleteAccount}
         style={{ height: '40px', width: '200px', marginTop: '10px', marginBottom: '10px' }}
         btnColor={'warning'}
       >

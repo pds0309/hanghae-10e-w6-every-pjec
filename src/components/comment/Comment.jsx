@@ -45,12 +45,12 @@ const Comment = ({ commentInfo, userInfo }) => {
           <UserWrap>
             <ProfileImage imageUrl={commentInfo.image} />
             <TwinInfoBox
-              leftContent={userInfo ? userInfo.nickname : commentInfo.nickname}
+              leftContent={commentInfo.nickname ? commentInfo.nickname : userInfo?.nickname}
               rightContent={commentInfo.createdAt}
               style={{ marginBottom: '-6px' }}
             />
           </UserWrap>
-          {userInfo && userInfo.userId === commentInfo.userId && (
+          {userInfo?.userId === commentInfo.userId && (
             <ButtonWrap>
               {!toggle ? (
                 <>

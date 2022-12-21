@@ -14,6 +14,7 @@ import {
 } from '../../constants/postOptions';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getFormattedDate } from '../../utils/dateHandler';
 
 const genOptionByParam = param => {
   return param ? { value: param, label: param } : '';
@@ -23,7 +24,7 @@ const PostSubmit = ({ post, submitApi, pageName }) => {
   const navigation = useNavigate();
   const [division, setDivision] = useState(genOptionByParam(post.division));
   const [onoff, setOnoff] = useState(genOptionByParam(post.onoff));
-  const [startDate, setStartDate] = useState(post?.startDate ?? '');
+  const [startDate, setStartDate] = useState(getFormattedDate(post?.startDate).split(' ')[0] ?? '');
   const [period, setPeriod] = useState(genOptionByParam(post.period));
   const [stack, setStack] = useState(
     post.stack ? post.stack.split(',').map(st => genOptionByParam(st)) : [],

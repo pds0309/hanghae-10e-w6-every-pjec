@@ -107,7 +107,9 @@ const PostThread = ({ postId }) => {
               </>
             </PostBasicInfo>
             <PostBasicInfo labelName="모집인원">{post.recruitNum ?? '미정'}</PostBasicInfo>
-            <PostBasicInfo labelName="시작 예정일">{post.startDate ?? '미정'}</PostBasicInfo>
+            <PostBasicInfo labelName="시작 예정일">
+              {getFormattedDate(post.startDate).split(' ')[0] ?? '미정'}
+            </PostBasicInfo>
             <PostBasicInfo labelName="기간">{post.period ?? '미정'}</PostBasicInfo>
           </PostBasicInfoContainer>
           <PostBasicInfoContainer>

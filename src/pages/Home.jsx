@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import LinkGroup from '../components/common/LinkGroup';
+import SliderContainer from '../components/home/SliderContainer';
 import PostCard from '../components/post/PostCard';
 import { __getAllPosts } from '../redux/modules/PostSlice';
 
@@ -29,7 +30,9 @@ const Home = () => {
 
   return (
     <Wrap>
-      <Backgr></Backgr>
+      <Backgr>
+        <SliderContainer />
+      </Backgr>
       <LinkGroup
         links={['전체', '프로젝트', '스터디']}
         clickFuncs={[

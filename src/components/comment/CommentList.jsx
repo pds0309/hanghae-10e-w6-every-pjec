@@ -19,8 +19,7 @@ const CommentList = ({ postId }) => {
   const postComment = () => {
     if (comment) {
       if (user) {
-        const userId = user.userId;
-        dispatch(__postComment({ postId, comment, userId }));
+        dispatch(__postComment({ postId, comment }));
         return setComment('');
       }
       alert('로그인 해주세요.');

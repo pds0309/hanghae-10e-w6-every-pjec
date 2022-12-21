@@ -1,11 +1,13 @@
 import React, { useLayoutEffect, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { __editMyNickname, __getMyProfile } from '../redux/modules/UserSlice';
+import { __editMyNickname, __getMyProfile, __editMyStack } from '../redux/modules/UserSlice';
 import userApi from '../apis/userApi';
 
 import useInput from '../hooks/useInput';
 import { USER_VALIDATION } from '../constants/validation';
+import Selection from '../components/common/Selection';
+import { STACK_OPTIONS } from '../constants/postOptions';
 
 import styled from 'styled-components';
 import { Colors } from '../styles';
@@ -17,6 +19,10 @@ import DivideLine from '../components/common/DivideLine';
 import ValidationText from '../components/common/ValidationText';
 
 import Input from '../components/common/Input';
+
+const genOptionByParam = param => {
+  return param ? { value: param, label: param } : '';
+};
 
 const Profile = (size = { size }) => {
   const dispatch = useDispatch();
@@ -68,6 +74,22 @@ const Profile = (size = { size }) => {
       dispatch(__editMyNickname({ nickname }));
       handleNicknameToggle();
     }
+  };
+
+  const [stackEditToggle, setStackEditToggle] = useState(false);
+
+  const [stack, setStack] = useState(
+    user.stack ? user.stack.split(',').map(st => genOptionByParam(st)) : [],
+  );
+
+  const handleStackToggle = () => {
+    setStackEditToggle(prev => !prev);
+  };
+
+  const editStack = () => {
+    const newStack = stack.map(st => st.value).join(',');
+    dispatch(__editMyStack({ newStack }));
+    handleStackToggle();
   };
 
   return (
@@ -126,9 +148,27 @@ const Profile = (size = { size }) => {
       )}
       <LabelWrap>
         <Label>기술스택</Label>
-        <EditButton>변경하기</EditButton>
+        {!stackEditToggle ? (
+          <EditButton onClick={handleStackToggle}>변경하기</EditButton>
+        ) : (
+          <>
+            <EditButton onClick={editStack}>변경하기</EditButton>
+            <EditButton onClick={handleStackToggle}>변경취소</EditButton>
+          </>
+        )}
       </LabelWrap>
-      <LowerContent>{user.stack}</LowerContent>
+      {!stackEditToggle ? (
+        <LowerContent>{user.stack.replaceAll(',', ', ')}</LowerContent>
+      ) : (
+        <SelectWrap>
+          <Selection
+            options={STACK_OPTIONS}
+            isMulti={true}
+            setValue={setStack}
+            initialValue={stack}
+          />
+        </SelectWrap>
+      )}
       <br />
       <br />
       <DivideLine />
@@ -207,4 +247,8 @@ const LowerContent = styled.p`
   margin-top: 15px;
   margin-bottom: 30px;
   margin-left: 6px;
+`;
+
+const SelectWrap = styled.div`
+  margin-top: 10px;
 `;

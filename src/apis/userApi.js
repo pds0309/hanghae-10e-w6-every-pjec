@@ -23,7 +23,8 @@ const userApi = {
   me: () => authInstance.get(USER_API + '/mypage'),
   // 닉네임 정보 수정
   editNickname: ({ nickname }) => authInstance.put(USER_API + `/nick`, { nickname }),
-  // TODO: 기술 스택 정보 수정
+  // 기술 스택 정보 수정
+  editStack: ({ stack }) => authInstance.put(USER_API + `/stack`, { stack }),
 };
 
 export default userApi;

@@ -26,6 +26,16 @@ export const __editMyNickname = createAsyncThunk('editNickname', async (payload,
   }
 });
 
+export const __editMyStack = createAsyncThunk('editStack', async (payload, thunkAPI) => {
+  try {
+    const stack = { stack: payload.newStack };
+    await userApi.editStack(stack);
+    return thunkAPI.fulfillWithValue(stack);
+  } catch (e) {
+    return thunkAPI.rejectWithValue(e);
+  }
+});
+
 export const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -58,6 +68,17 @@ export const userSlice = createSlice({
       state.user = { ...state.user, nickname: action.payload.nickname };
     },
     [__editMyNickname.rejected]: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    [__editMyStack.pending]: state => {
+      state.isLoading = true;
+    },
+    [__editMyStack.fulfilled]: (state, action) => {
+      state.isLoading = false;
+      state.user = { ...state.user, stack: action.payload.stack };
+    },
+    [__editMyStack.rejected]: (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
     },

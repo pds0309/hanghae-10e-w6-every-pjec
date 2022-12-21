@@ -36,6 +36,15 @@ export const __editMyStack = createAsyncThunk('editStack', async (payload, thunk
   }
 });
 
+export const __deleteAccount = createAsyncThunk('deleteAccount', async (_, thunkAPI) => {
+  try {
+    await userApi.deleteAccount();
+    return thunkAPI.fulfillWithValue();
+  } catch (e) {
+    return thunkAPI.rejectWithValue(e);
+  }
+});
+
 export const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -79,6 +88,18 @@ export const userSlice = createSlice({
       state.user = { ...state.user, stack: action.payload.stack };
     },
     [__editMyStack.rejected]: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    [__deleteAccount.pending]: state => {
+      state.isLoading = true;
+    },
+    [__deleteAccount.fulfilled]: state => {
+      state.isLoading = false;
+      localStorage.clear();
+      window.location.reload();
+    },
+    [__deleteAccount.rejected]: (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
     },

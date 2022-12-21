@@ -39,19 +39,18 @@ const Comment = ({ commentInfo, userInfo }) => {
   };
 
   return (
-    commentInfo &&
-    userInfo.user && (
+    commentInfo && (
       <div>
         <TopWrap>
           <UserWrap>
-            <ProfileImage imageUrl={commentInfo.image ? commentInfo.image : userInfo.user.image} />
+            <ProfileImage imageUrl={commentInfo.image} />
             <TwinInfoBox
-              leftContent={commentInfo.nickname ? commentInfo.nickname : userInfo.user.nickname}
+              leftContent={userInfo ? userInfo.nickname : commentInfo.nickname}
               rightContent={commentInfo.createdAt}
               style={{ marginBottom: '-6px' }}
             />
           </UserWrap>
-          {userInfo.user.userId === commentInfo.userId && (
+          {userInfo && userInfo.userId === commentInfo.userId && (
             <ButtonWrap>
               {!toggle ? (
                 <>

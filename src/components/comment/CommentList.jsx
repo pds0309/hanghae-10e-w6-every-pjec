@@ -11,7 +11,7 @@ import Comment from './Comment';
 
 const CommentList = ({ postId }) => {
   const dispatch = useDispatch();
-  const user = useSelector(state => state.user);
+  const user = useSelector(state => state.user.user);
   const comments = useSelector(state => state.comments.comments);
 
   const [comment, setComment] = useState('');
@@ -19,7 +19,7 @@ const CommentList = ({ postId }) => {
   const postComment = () => {
     if (comment) {
       if (user) {
-        const userId = user.user.userId;
+        const userId = user.userId;
         dispatch(__postComment({ postId, comment, userId }));
         return setComment('');
       }

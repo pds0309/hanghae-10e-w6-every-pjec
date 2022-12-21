@@ -11,6 +11,7 @@ import { USER_VALIDATION } from '../constants/validation';
 import useInput from '../hooks/useInput';
 import { login } from '../redux/modules/UserSlice';
 import { Colors } from '../styles';
+import { setToken } from '../utils/tokenHandler';
 
 const Signin = () => {
   const dispatch = useDispatch();
@@ -25,10 +26,7 @@ const Signin = () => {
         .login({ loginId, password })
         .then(res => {
           const { authorization } = res.data;
-          const tokens = authorization.split('%');
-          localStorage.setItem('accessToken', tokens[1]);
-          localStorage.setItem('refreshToken', tokens[2]);
-          localStorage.setItem('isLogined', true);
+          setToken(authorization);
           dispatch(login());
           navigation('/');
         })

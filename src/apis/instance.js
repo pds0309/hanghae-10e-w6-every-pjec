@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { setToken } from '../utils/tokenHandler';
 
 const BASE_URL = process.env.REACT_APP_API_ENDPOINT;
 
@@ -31,8 +32,30 @@ authInstance.interceptors.response.use(
   response => {
     return response;
   },
-  error => {
-    // TODO: Unauthorization 에러에 대한 refresh Token으로의 재인증요청 처리 필요
+  async error => {
+    if (error.response?.status === 401) {
+      try {
+        const response = await axios.post(
+          BASE_URL + '/user/reissuance',
+          {},
+          {
+            headers: {
+              Authorization:
+                'Bearer%' +
+                localStorage.getItem('accessToken') +
+                '%' +
+                localStorage.getItem('refreshToken'),
+            },
+          },
+        );
+        setToken(response.data.authorization);
+        error.config.headers.Authorization = 'Bearer%' + localStorage.getItem('accessToken');
+        return axios(error.config);
+      } catch (err) {
+        localStorage.clear();
+        window.location.reload();
+      }
+    }
     const errorResponse = {
       ...error.response.data,
       status: error.response.status,

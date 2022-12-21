@@ -14,7 +14,7 @@ export const __postComment = createAsyncThunk('postComment', async (payload, thu
 export const __fetchComments = createAsyncThunk('fetchComments', async (payload, thunkAPI) => {
   try {
     const { data } = await commentApi.getAllForPost(payload);
-    return thunkAPI.fulfillWithValue(data?.existPosts ?? data);
+    return thunkAPI.fulfillWithValue(data?.commentList ?? data);
   } catch (e) {
     return thunkAPI.rejectWithValue(e);
   }
@@ -59,7 +59,7 @@ const CommentSlice = createSlice({
     },
     [__fetchComments.fulfilled]: (state, action) => {
       state.isLoading = false;
-      state.comments = action.payload.reverse();
+      state.comments = action.payload;
     },
     [__fetchComments.rejected]: (state, action) => {
       state.isLoading = false;

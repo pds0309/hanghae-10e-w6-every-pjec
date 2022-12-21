@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import ProfileImage from '../common/ProfileImage';
 import DivideLine from '../common/DivideLine';
 import TwinInfoBox from '../common/TwinInfoBox';
+import { getFormattedDate } from '../../utils/dateHandler';
 
 const Comment = ({ commentInfo, userInfo }) => {
   const dispatch = useDispatch();
@@ -46,7 +47,7 @@ const Comment = ({ commentInfo, userInfo }) => {
             <ProfileImage imageUrl={commentInfo.image} />
             <TwinInfoBox
               leftContent={commentInfo.nickname ? commentInfo.nickname : userInfo?.nickname}
-              rightContent={commentInfo.createdAt}
+              rightContent={getFormattedDate(commentInfo.createdAt)}
               style={{ marginBottom: '-6px' }}
             />
           </UserWrap>

@@ -38,11 +38,11 @@ const Header = ({ user, isLogined }) => {
       <>
         {/* TODO: 인증 상태 시 헤더바 UI/기능 완성하기 */}
         <HeaderLink to="postupload">모집글 작성</HeaderLink>
-        <div style={{ display: 'flex', gridColumnGap: '6px' }}>
+        <div style={{ display: 'flex', gridColumnGap: '8px' }}>
           <div>
             <ProfileImage imageUrl={user.image} size={28} />
           </div>
-          <HeaderLink to="/" onClick={() => setMyBoxVisible(!myBoxVisible)}>
+          <AuthHeader onClick={() => setMyBoxVisible(!myBoxVisible)}>
             <Name>{user.nickname}</Name>
             <svg
               width="16"
@@ -63,7 +63,7 @@ const Header = ({ user, isLogined }) => {
                 로그아웃
               </MyBoxLink>
             </SelectBox>
-          </HeaderLink>
+          </AuthHeader>
         </div>
       </>
     );
@@ -101,7 +101,9 @@ const Logo = styled.span`
 
 const Name = styled.span`
   font-size: 14px;
+  margin-top: 1px;
   color: ${Colors.grey};
+  cursor: pointer;
   :hover {
     color: black;
     opacity: 0.8;
@@ -123,6 +125,15 @@ const MyBoxLink = styled(Link)`
 
 const HeaderLink = styled(Link)`
   text-decoration: none;
+  color: black;
+  font-size: 16px;
+  font-weight: 600;
+  :hover {
+    color: ${Colors.brand};
+  }
+`;
+
+const AuthHeader = styled.span`
   color: black;
   font-size: 16px;
   font-weight: 600;

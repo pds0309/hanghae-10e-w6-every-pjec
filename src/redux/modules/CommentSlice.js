@@ -4,8 +4,8 @@ import commentApi from '../../apis/commentApi';
 export const __postComment = createAsyncThunk('postComment', async (payload, thunkAPI) => {
   try {
     const { postId, comment } = payload;
-    const { data } = await commentApi.submit(postId, { comment });
-    return thunkAPI.fulfillWithValue(data);
+    await commentApi.submit(postId, { comment });
+    return thunkAPI.fulfillWithValue(payload);
   } catch (e) {
     return thunkAPI.rejectWithValue(e);
   }
@@ -14,7 +14,7 @@ export const __postComment = createAsyncThunk('postComment', async (payload, thu
 export const __fetchComments = createAsyncThunk('fetchComments', async (payload, thunkAPI) => {
   try {
     const { data } = await commentApi.getAllForPost(payload);
-    return thunkAPI.fulfillWithValue(data);
+    return thunkAPI.fulfillWithValue(data?.commentList ?? data);
   } catch (e) {
     return thunkAPI.rejectWithValue(e);
   }
@@ -23,8 +23,8 @@ export const __fetchComments = createAsyncThunk('fetchComments', async (payload,
 export const __editComment = createAsyncThunk('editComment', async (payload, thunkAPI) => {
   try {
     const { commentId, comment } = payload;
-    const { data } = await commentApi.updateById(commentId, { comment });
-    return thunkAPI.fulfillWithValue(data);
+    await commentApi.updateById(commentId, { comment });
+    return thunkAPI.fulfillWithValue(payload);
   } catch (e) {
     return thunkAPI.rejectWithValue(e);
   }
@@ -40,16 +40,7 @@ export const __deleteComment = createAsyncThunk('deleteComment', async (payload,
 });
 
 const initialState = {
-  comments: [
-    {
-      id: 1,
-      commentId: 1,
-      postId: 1,
-      userId: 1,
-      comment: '해치움',
-      createdAt: '2022-12-19T00:18:32.760Z',
-    },
-  ],
+  comments: [],
   isLoading: false,
   error: null,
 };
@@ -68,14 +59,13 @@ const CommentSlice = createSlice({
     },
     [__fetchComments.fulfilled]: (state, action) => {
       state.isLoading = false;
-      state.comments = action.payload.reverse();
+      state.comments = action.payload;
     },
     [__fetchComments.rejected]: (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
     },
     [__editComment.fulfilled]: (state, action) => {
-      console.log(action.payload);
       state.isLoading = false;
       state.comments = state.comments.map(e => ({
         ...e,

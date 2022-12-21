@@ -6,7 +6,7 @@ const userApi = {
   // 로그인
   login: ({ loginId, password }) => noAuthInstance.post(USER_API + '/login', { loginId, password }),
   // 회원가입
-  join: ({ loginId, nickname, password, pwconfirm, image }) =>
+  join: ({ loginId, nickname, password, pwconfirm, image = '' }) =>
     noAuthInstance.post(USER_API + '/signup', {
       loginId,
       nickname,
@@ -15,7 +15,7 @@ const userApi = {
       image,
     }),
   // 아이디 중복 체크
-  validateLoginId: loginId => noAuthInstance.get(USER_API + `/signup/id?loginId=${loginId}`),
+  validateLoginId: loginId => noAuthInstance.get(USER_API + `/signup/id?id=${loginId}`),
   // 닉네임 중복 체크
   validateNickname: nickname =>
     noAuthInstance.get(USER_API + `/signup/nickname?nickname=${nickname}`),

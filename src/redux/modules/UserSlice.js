@@ -5,7 +5,7 @@ const initialState = {
   user: null,
   isLoading: false,
   error: null,
-  isLogined: false,
+  isLogined: localStorage.getItem('isLogined'),
 };
 
 export const __getMyProfile = createAsyncThunk('fetchComments', async (_, thunkAPI) => {

@@ -14,19 +14,23 @@ import {
 } from '../../constants/postOptions';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import postApi from '../../apis/postApi';
-// TODO: 수정을 위한 확장성 필요
-const PostSubmit = ({ post, funcName, pageName }) => {
+
+const genOptionByParam = param => {
+  return param ? { value: param, label: param } : '';
+};
+
+const PostSubmit = ({ post, submitApi, pageName }) => {
   const navigation = useNavigate();
-  const [division, setDivision] = useState();
-  const [onoff, setOnoff] = useState(post?.onoff ?? '');
+  const [division, setDivision] = useState(genOptionByParam(post.division));
+  const [onoff, setOnoff] = useState(genOptionByParam(post.onoff));
   const [startDate, setStartDate] = useState(post?.startDate ?? '');
-  const [period, setPeriod] = useState(post?.period ?? '');
-  const [stack, setStack] = useState(post?.stack?.split(',') ?? []);
+  const [period, setPeriod] = useState(genOptionByParam(post.period));
+  const [stack, setStack] = useState(
+    post.stack ? post.stack.split(',').map(st => genOptionByParam(st)) : [],
+  );
   const [title, setTitle] = useState(post?.title ?? '');
   const [content, setContent] = useState(post?.content ?? '');
   const [contact, setContact] = useState(post?.contact ?? '');
-
   const handleSubmit = e => {
     e.preventDefault();
     if (!division || !onoff || !period || stack.length === 0 || !contact) {
@@ -45,21 +49,8 @@ const PostSubmit = ({ post, funcName, pageName }) => {
       alert('내용을 확인하세요');
       return;
     }
-    postApi[funcName]({
-      title: title,
-      content: content,
-      division: division.value,
-      onoff: onoff.value,
-      startDate: startDate,
-      period: period.value,
-      stack: stack.map(st => st.value).join(','),
-      contact,
-    })
-      .then(() => {
-        alert('게시글' + pageName + '완료!');
-        navigation(-1);
-      })
-      .catch(err => alert(err.errorMessagae));
+
+    submitApi({ title, content, division, onoff, startDate, period, stack, contact });
   };
   const handleClickBackButton = () => {
     navigation(-1);
@@ -85,6 +76,7 @@ const PostSubmit = ({ post, funcName, pageName }) => {
                 options={DIVISION_OPTIONS}
                 placeholder="프로젝트/스터디"
                 setValue={setDivision}
+                initialValue={division}
               />
             }
             rightContent={
@@ -92,6 +84,7 @@ const PostSubmit = ({ post, funcName, pageName }) => {
                 options={ONOFF_OPTIONS}
                 placeholder="온라인/오프라인"
                 setValue={setOnoff}
+                initialValue={onoff}
               />
             }
           />
@@ -110,7 +103,9 @@ const PostSubmit = ({ post, funcName, pageName }) => {
                 required
               />
             }
-            rightContent={<Selection options={PERIOD_OPTIONS} setValue={setPeriod} />}
+            rightContent={
+              <Selection options={PERIOD_OPTIONS} setValue={setPeriod} initialValue={period} />
+            }
           />
           <br />
           <TwinInputBox
@@ -118,7 +113,14 @@ const PostSubmit = ({ post, funcName, pageName }) => {
             rightContent={<Label>연락처</Label>}
           />
           <TwinInputBox
-            leftContent={<Selection options={STACK_OPTIONS} isMulti={true} setValue={setStack} />}
+            leftContent={
+              <Selection
+                options={STACK_OPTIONS}
+                isMulti={true}
+                setValue={setStack}
+                initialValue={stack}
+              />
+            }
             rightContent={
               <Input
                 style={{ width: '300px' }}

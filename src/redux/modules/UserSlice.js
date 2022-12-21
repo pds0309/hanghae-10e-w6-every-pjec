@@ -17,6 +17,25 @@ export const __getMyProfile = createAsyncThunk('getProfile', async (_, thunkAPI)
   }
 });
 
+export const __editMyNickname = createAsyncThunk('editNickname', async (payload, thunkAPI) => {
+  try {
+    await userApi.editNickname(payload);
+    return thunkAPI.fulfillWithValue(payload);
+  } catch (e) {
+    return thunkAPI.rejectWithValue(e);
+  }
+});
+
+export const __editMyStack = createAsyncThunk('editStack', async (payload, thunkAPI) => {
+  try {
+    const stack = { stack: payload.newStack };
+    await userApi.editStack(stack);
+    return thunkAPI.fulfillWithValue(stack);
+  } catch (e) {
+    return thunkAPI.rejectWithValue(e);
+  }
+});
+
 export const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -38,6 +57,28 @@ export const userSlice = createSlice({
       state.user = action.payload;
     },
     [__getMyProfile.rejected]: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    [__editMyNickname.pending]: state => {
+      state.isLoading = true;
+    },
+    [__editMyNickname.fulfilled]: (state, action) => {
+      state.isLoading = false;
+      state.user = { ...state.user, nickname: action.payload.nickname };
+    },
+    [__editMyNickname.rejected]: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    [__editMyStack.pending]: state => {
+      state.isLoading = true;
+    },
+    [__editMyStack.fulfilled]: (state, action) => {
+      state.isLoading = false;
+      state.user = { ...state.user, stack: action.payload.stack };
+    },
+    [__editMyStack.rejected]: (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
     },

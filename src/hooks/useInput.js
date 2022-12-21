@@ -49,7 +49,15 @@ const useInput = (initValue, validationParam, inputDependencyValue) => {
     return;
   };
 
-  return [value, valid, onChange];
+  const reset = () => {
+    setValue(initValue);
+    setValid({
+      isInputValidated: false,
+      message: '',
+    });
+  };
+
+  return [value, valid, onChange, reset];
 };
 
 export default useInput;

@@ -1,4 +1,14 @@
-import React from 'react';
+import React, { useLayoutEffect, useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { __editMyNickname, __getMyProfile, __editMyStack } from '../redux/modules/UserSlice';
+import userApi from '../apis/userApi';
+
+import useInput from '../hooks/useInput';
+import { USER_VALIDATION } from '../constants/validation';
+import Selection from '../components/common/Selection';
+import { STACK_OPTIONS } from '../constants/postOptions';
+
 import styled from 'styled-components';
 import { Colors } from '../styles';
 import ProfileImage from '../components/common/ProfileImage';
@@ -8,43 +18,157 @@ import TwinInputBox from '../components/common/TwinInputBox';
 import DivideLine from '../components/common/DivideLine';
 import ValidationText from '../components/common/ValidationText';
 
+import Input from '../components/common/Input';
+
+const genOptionByParam = param => {
+  return param ? { value: param, label: param } : '';
+};
+
 const Profile = (size = { size }) => {
+  const dispatch = useDispatch();
+  const user = useSelector(state => state.user.user);
+
+  useLayoutEffect(() => {
+    dispatch(__getMyProfile);
+  }, []);
+
+  const [nicknameEditToggle, setNicknameEditToggle] = useState(false);
+  const [nickname, nicknameValidation, handleChangeNickname, resetInput] = useInput(
+    user.nickname,
+    USER_VALIDATION.NICKNAME,
+  );
+  const [nicknameDuplicated, setNicknameDuplicated] = useState({
+    status: false,
+    message: '',
+  });
+
+  useEffect(() => {
+    setNicknameDuplicated({
+      status: false,
+      message: '',
+    });
+  }, [nickname]);
+
+  const handleNicknameToggle = () => {
+    setNicknameEditToggle(prev => !prev);
+    resetInput();
+  };
+
+  const handleBlurNickname = () => {
+    if (!nicknameValidation.isInputValidated) {
+      return;
+    }
+
+    if (nickname === user.nickname) {
+      return setNicknameDuplicated({ status: false, message: '새로운 닉네임을 입력해주세요' });
+    }
+
+    userApi
+      .validateNickname(nickname)
+      .then(res => setNicknameDuplicated({ status: true, message: res.data.message }))
+      .catch(err => setNicknameDuplicated({ status: false, message: err.errorMessage }));
+  };
+
+  const editNickname = () => {
+    if (nicknameValidation.isInputValidated && nicknameDuplicated.status) {
+      dispatch(__editMyNickname({ nickname }));
+      handleNicknameToggle();
+    }
+  };
+
+  const [stackEditToggle, setStackEditToggle] = useState(false);
+
+  const [stack, setStack] = useState(
+    user.stack ? user.stack.split(',').map(st => genOptionByParam(st)) : [],
+  );
+
+  const handleStackToggle = () => {
+    setStackEditToggle(prev => !prev);
+  };
+
+  const editStack = () => {
+    const newStack = stack.map(st => st.value).join(',');
+    dispatch(__editMyStack({ newStack }));
+    handleStackToggle();
+  };
+
   return (
     <Warp>
       <Title>내 프로필</Title>
       <SectionWrap>
         <ImageWrap>
-          <ProfileImage size={200} />
+          <ProfileImage size={200} imageUrl={user.image} />
           <ButtonWrap>
             <Button style={{ height: '40px', width: '200px' }}>프로필 변경</Button>
           </ButtonWrap>
         </ImageWrap>
         <InfoWrap>
-          <h1 style={{ marginBottom: '0px' }}>내글자가몇글자까지</h1>
+          <h1 style={{ marginBottom: '0px' }}>{user.nickname}</h1>
           <InfoBox>
             <TwinInputBox
               leftContent={<Label>로그인 ID</Label>}
               rightContent={<Label>가입일</Label>}
             />
             <TwinInputBox
-              leftContent={<UpperContent>로그인 아이디에용</UpperContent>}
-              rightContent={<UpperContent>가입일이에용</UpperContent>}
+              leftContent={<UpperContent>{user.loginId}</UpperContent>}
+              rightContent={<UpperContent>{user.createdAt}</UpperContent>}
             />
           </InfoBox>
         </InfoWrap>
       </SectionWrap>
       <LabelWrap>
         <Label>닉네임</Label>
-        <EditButton>변경하기</EditButton>
+        {!nicknameEditToggle ? (
+          <EditButton onClick={handleNicknameToggle}>변경하기</EditButton>
+        ) : (
+          <>
+            <EditButton onClick={editNickname}>변경하기</EditButton>
+            <EditButton onClick={handleNicknameToggle}>변경취소</EditButton>
+          </>
+        )}
       </LabelWrap>
-      <LowerContent>글씨를 써용</LowerContent>
-      <br />
-      <br />
+      {!nicknameEditToggle ? (
+        <LowerContent>{user.nickname}</LowerContent>
+      ) : (
+        <>
+          <Input
+            value={nickname}
+            onChange={handleChangeNickname}
+            onBlur={handleBlurNickname}
+            style={{ marginTop: '15px' }}
+          />
+          <ValidationText
+            isValidationSuccess={nicknameValidation.isInputValidated && nicknameDuplicated.status}
+          >
+            {!nicknameValidation.isInputValidated
+              ? nicknameValidation.message
+              : nicknameDuplicated.message || nicknameValidation.message}
+          </ValidationText>
+        </>
+      )}
       <LabelWrap>
         <Label>기술스택</Label>
-        <EditButton>변경하기</EditButton>
+        {!stackEditToggle ? (
+          <EditButton onClick={handleStackToggle}>변경하기</EditButton>
+        ) : (
+          <>
+            <EditButton onClick={editStack}>변경하기</EditButton>
+            <EditButton onClick={handleStackToggle}>변경취소</EditButton>
+          </>
+        )}
       </LabelWrap>
-      <LowerContent>글씨를 써용</LowerContent>
+      {!stackEditToggle ? (
+        <LowerContent>{user.stack.replaceAll(',', ', ')}</LowerContent>
+      ) : (
+        <SelectWrap>
+          <Selection
+            options={STACK_OPTIONS}
+            isMulti={true}
+            setValue={setStack}
+            initialValue={stack}
+          />
+        </SelectWrap>
+      )}
       <br />
       <br />
       <DivideLine />
@@ -107,17 +231,24 @@ const LabelWrap = styled.div`
 `;
 
 const EditButton = styled.button`
+  cursor: pointer;
   color: ${Colors.brand};
   text-decoration-line: underline;
   border: none;
   background-color: transparent;
   margin-top: 13px;
+  margin-right: -15px;
   margin-left: 13px;
 `;
 
 const LowerContent = styled.p`
   font-size: 18px;
   font-weight: 600;
-  margin-top: 10px;
+  margin-top: 15px;
+  margin-bottom: 30px;
   margin-left: 6px;
+`;
+
+const SelectWrap = styled.div`
+  margin-top: 10px;
 `;

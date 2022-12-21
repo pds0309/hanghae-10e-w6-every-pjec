@@ -19,9 +19,11 @@ const userApi = {
   // 닉네임 중복 체크
   validateNickname: nickname =>
     noAuthInstance.get(USER_API + `/signup/nickname?nickname=${nickname}`),
-  // TODO: 회원 본인 정보 조회
+  // 회원 본인 정보 조회
   me: () => authInstance.get(USER_API + '/mypage'),
-  // TODO: 회원 정보 수정
+  // 닉네임 정보 수정
+  editNickname: ({ nickname }) => authInstance.put(USER_API + `/nick`, { nickname }),
+  // TODO: 기술 스택 정보 수정
 };
 
 export default userApi;

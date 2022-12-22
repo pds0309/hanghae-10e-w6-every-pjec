@@ -153,6 +153,7 @@ const Signup = () => {
           height="30px"
           placeholder="비밀번호를 입력하세요."
           value={password}
+          type="password"
           onChange={handlePasswordChange}
           required
         />
@@ -164,6 +165,7 @@ const Signup = () => {
           width="366px"
           height="30px"
           placeholder="비밀번호를 입력하세요."
+          type="password"
           value={pwconfirm}
           onChange={handlePwConfirmChange}
           required

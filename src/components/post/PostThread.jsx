@@ -80,7 +80,7 @@ const PostThread = ({ postId }) => {
           <h1>{post.title}</h1>
           <WriteInfoContainer>
             <WriterBox>
-              <ProfileImage imageUrl={post.iamge} />
+              <ProfileImage imageUrl={post.image} />
               <TwinInfoBox
                 leftContent={post.nickname}
                 rightContent={getFormattedDate(post.createdAt)}

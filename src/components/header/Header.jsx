@@ -7,6 +7,7 @@ import { Colors } from '../../styles';
 import SelectBox from './SelectBox';
 import ProfileImage from '../common/ProfileImage';
 import AlertContainer from './AlertContainer';
+import Logo from '../common/Logo';
 
 const Header = ({ user, isLogined }) => {
   const dispatch = useDispatch();
@@ -86,7 +87,7 @@ const Header = ({ user, isLogined }) => {
     <StyledHeader>
       <div>
         <HeaderLink to="/">
-          <Logo>LOGO</Logo>
+          <Logo />
         </HeaderLink>
       </div>
       <RightSection>
@@ -105,11 +106,6 @@ const StyledHeader = styled.div`
 const RightSection = styled.div`
   display: flex;
   grid-column-gap: 30px;
-`;
-
-const Logo = styled.span`
-  font-size: 24px;
-  font-weight: bold;
 `;
 
 const Name = styled.span`

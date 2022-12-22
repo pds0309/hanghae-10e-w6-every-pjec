@@ -25,6 +25,8 @@ const userApi = {
   editNickname: ({ nickname }) => authInstance.put(USER_API + `/nick`, { nickname }),
   // 기술 스택 정보 수정
   editStack: ({ stack }) => authInstance.put(USER_API + `/stack`, { stack }),
+  // 프로필 이미지 업로드
+  editProfile: ({ image }) => authInstance.put(USER_API + '/image', { image }),
   // 회원 탈퇴
   deleteAccount: () => authInstance.delete(USER_API + `/secession`),
 };

@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -7,6 +7,7 @@ import {
   __getMyProfile,
   __editMyStack,
   __deleteAccount,
+  changeProfile,
 } from '../redux/modules/UserSlice';
 import userApi from '../apis/userApi';
 
@@ -24,6 +25,7 @@ import TwinInputBox from '../components/common/TwinInputBox';
 import DivideLine from '../components/common/DivideLine';
 import ValidationText from '../components/common/ValidationText';
 import Input from '../components/common/Input';
+import imageApi from '../apis/imaegApi';
 
 const genOptionByParam = param => {
   return param ? { value: param, label: param } : '';
@@ -32,22 +34,22 @@ const genOptionByParam = param => {
 const Profile = (size = { size }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const user = useSelector(state => state.user.user);
-
-  useLayoutEffect(() => {
+  const { user, isLogined } = useSelector(state => state.user);
+  const imageUploadRef = useRef();
+  useEffect(() => {
     dispatch(__getMyProfile);
   }, []);
 
   const [nicknameEditToggle, setNicknameEditToggle] = useState(false);
   const [nickname, nicknameValidation, handleChangeNickname, resetInput] = useInput(
-    user.nickname,
+    user?.nickname,
     USER_VALIDATION.NICKNAME,
   );
   const [nicknameDuplicated, setNicknameDuplicated] = useState({
     status: false,
     message: '',
   });
-
+  const [currentProfileImage, setCurrentProfileImage] = useState(user?.image);
   useEffect(() => {
     setNicknameDuplicated({
       status: false,
@@ -85,7 +87,7 @@ const Profile = (size = { size }) => {
   const [stackEditToggle, setStackEditToggle] = useState(false);
 
   const [stack, setStack] = useState(
-    user.stack ? user.stack.split(',').map(st => genOptionByParam(st)) : [],
+    user?.stack ? user.stack.split(',').map(st => genOptionByParam(st)) : [],
   );
 
   const handleStackToggle = () => {
@@ -105,97 +107,142 @@ const Profile = (size = { size }) => {
     }
   };
 
+  const handleOpenProfileUploadClick = () => {
+    imageUploadRef.current.click();
+  };
+
+  const handleImageUpload = ({ target }) => {
+    const uploadedFile = target?.files?.[0];
+    if (!uploadedFile) {
+      return;
+    }
+    const formData = new FormData();
+    formData.append('image', uploadedFile);
+    formData.append('category', 'PROFILE');
+    formData.append('uploader', user.userId);
+    imageApi
+      .uploadProfile(formData)
+      .then(response => {
+        const path = process.env.REACT_APP_IMAGE_ENDPOINT + response.data.imagePath;
+        setCurrentProfileImage(path);
+        userApi
+          .editProfile({ image: path })
+          .then(() => dispatch(changeProfile(path)))
+          .catch(() => alert('프로필 등록 실패'));
+      })
+      .catch(err => alert(err?.message ?? '프로필 등록 실패'));
+  };
+
   return (
     <Warp>
-      <Title>내 프로필</Title>
-      <SectionWrap>
-        <ImageWrap>
-          <ProfileImage size={200} imageUrl={user.image} />
-          <ButtonWrap>
-            <Button style={{ height: '40px', width: '200px' }}>프로필 변경</Button>
-          </ButtonWrap>
-        </ImageWrap>
-        <InfoWrap>
-          <h1 style={{ marginBottom: '0px' }}>{user.nickname}</h1>
-          <InfoBox>
-            <TwinInputBox
-              leftContent={<Label>로그인 ID</Label>}
-              rightContent={<Label>가입일</Label>}
-            />
-            <TwinInputBox
-              leftContent={<UpperContent>{user.loginId}</UpperContent>}
-              rightContent={<UpperContent>{user.createdAt}</UpperContent>}
-            />
-          </InfoBox>
-        </InfoWrap>
-      </SectionWrap>
-      <LabelWrap>
-        <Label>닉네임</Label>
-        {!nicknameEditToggle ? (
-          <EditButton onClick={handleNicknameToggle}>변경하기</EditButton>
-        ) : (
-          <>
-            <EditButton onClick={editNickname}>변경하기</EditButton>
-            <EditButton onClick={handleNicknameToggle}>변경취소</EditButton>
-          </>
-        )}
-      </LabelWrap>
-      {!nicknameEditToggle ? (
-        <LowerContent>{user.nickname}</LowerContent>
-      ) : (
+      {isLogined && user && (
         <>
-          <Input
-            value={nickname}
-            onChange={handleChangeNickname}
-            onBlur={handleBlurNickname}
-            style={{ marginTop: '15px' }}
-          />
-          <ValidationText
-            isValidationSuccess={nicknameValidation.isInputValidated && nicknameDuplicated.status}
+          <Title>내 프로필</Title>
+          <SectionWrap>
+            <ImageWrap>
+              <ProfileImage size={200} imageUrl={currentProfileImage} />
+              <ButtonWrap>
+                <Button
+                  style={{ height: '40px', width: '200px' }}
+                  onClick={handleOpenProfileUploadClick}
+                >
+                  프로필 변경
+                </Button>
+                <div style={{ height: '0px', overflow: 'hidden', width: '0px' }}>
+                  <input
+                    ref={imageUploadRef}
+                    type="file"
+                    name="fileInput"
+                    onChange={handleImageUpload}
+                  />
+                </div>
+              </ButtonWrap>
+            </ImageWrap>
+            <InfoWrap>
+              <h1 style={{ marginBottom: '0px' }}>{user.nickname}</h1>
+              <InfoBox>
+                <TwinInputBox
+                  leftContent={<Label>로그인 ID</Label>}
+                  rightContent={<Label>가입일</Label>}
+                />
+                <TwinInputBox
+                  leftContent={<UpperContent>{user.loginId}</UpperContent>}
+                  rightContent={<UpperContent>{user.createdAt}</UpperContent>}
+                />
+              </InfoBox>
+            </InfoWrap>
+          </SectionWrap>
+          <LabelWrap>
+            <Label>닉네임</Label>
+            {!nicknameEditToggle ? (
+              <EditButton onClick={handleNicknameToggle}>변경하기</EditButton>
+            ) : (
+              <>
+                <EditButton onClick={editNickname}>변경하기</EditButton>
+                <EditButton onClick={handleNicknameToggle}>변경취소</EditButton>
+              </>
+            )}
+          </LabelWrap>
+          {!nicknameEditToggle ? (
+            <LowerContent>{user.nickname}</LowerContent>
+          ) : (
+            <>
+              <Input
+                value={nickname}
+                onChange={handleChangeNickname}
+                onBlur={handleBlurNickname}
+                style={{ marginTop: '15px' }}
+              />
+              <ValidationText
+                isValidationSuccess={
+                  nicknameValidation.isInputValidated && nicknameDuplicated.status
+                }
+              >
+                {!nicknameValidation.isInputValidated
+                  ? nicknameValidation.message
+                  : nicknameDuplicated.message || nicknameValidation.message}
+              </ValidationText>
+            </>
+          )}
+          <LabelWrap>
+            <Label>기술스택</Label>
+            {!stackEditToggle ? (
+              <EditButton onClick={handleStackToggle}>변경하기</EditButton>
+            ) : (
+              <>
+                <EditButton onClick={editStack}>변경하기</EditButton>
+                <EditButton onClick={handleStackToggle}>변경취소</EditButton>
+              </>
+            )}
+          </LabelWrap>
+          {!stackEditToggle ? (
+            <LowerContent>{user.stack?.replaceAll(',', ', ')}</LowerContent>
+          ) : (
+            <SelectWrap>
+              <Selection
+                options={STACK_OPTIONS}
+                isMulti={true}
+                setValue={setStack}
+                initialValue={stack}
+              />
+            </SelectWrap>
+          )}
+          <br />
+          <br />
+          <DivideLine />
+          <Label>회원탈퇴</Label>
+          <Button
+            onClick={deleteAccount}
+            style={{ height: '40px', width: '200px', marginTop: '10px', marginBottom: '10px' }}
+            btnColor={'warning'}
           >
-            {!nicknameValidation.isInputValidated
-              ? nicknameValidation.message
-              : nicknameDuplicated.message || nicknameValidation.message}
+            회원탈퇴
+          </Button>
+          <ValidationText isValidationSuccess={false}>
+            탈퇴 시 작성하신 포스트 및 댓글이 모두 삭제되며 복구되지 않습니다.
           </ValidationText>
         </>
       )}
-      <LabelWrap>
-        <Label>기술스택</Label>
-        {!stackEditToggle ? (
-          <EditButton onClick={handleStackToggle}>변경하기</EditButton>
-        ) : (
-          <>
-            <EditButton onClick={editStack}>변경하기</EditButton>
-            <EditButton onClick={handleStackToggle}>변경취소</EditButton>
-          </>
-        )}
-      </LabelWrap>
-      {!stackEditToggle ? (
-        <LowerContent>{user.stack?.replaceAll(',', ', ')}</LowerContent>
-      ) : (
-        <SelectWrap>
-          <Selection
-            options={STACK_OPTIONS}
-            isMulti={true}
-            setValue={setStack}
-            initialValue={stack}
-          />
-        </SelectWrap>
-      )}
-      <br />
-      <br />
-      <DivideLine />
-      <Label>회원탈퇴</Label>
-      <Button
-        onClick={deleteAccount}
-        style={{ height: '40px', width: '200px', marginTop: '10px', marginBottom: '10px' }}
-        btnColor={'warning'}
-      >
-        회원탈퇴
-      </Button>
-      <ValidationText isValidationSuccess={false}>
-        탈퇴 시 작성하신 포스트 및 댓글이 모두 삭제되며 복구되지 않습니다.
-      </ValidationText>
     </Warp>
   );
 };
@@ -235,6 +282,7 @@ const UpperContent = styled.div`
 `;
 
 const ButtonWrap = styled.div`
+  position: relative;
   height: 120px;
   padding-top: 20px;
   display: flex;

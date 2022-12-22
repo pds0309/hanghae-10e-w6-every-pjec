@@ -1,5 +1,11 @@
+import Router from './shared/Router';
 function App() {
-  return <div>Home</div>;
+  return (
+    <>
+      <Router />
+      <div style={{ height: '120px' }}>&nbsp;</div>
+    </>
+  );
 }
 
 export default App;

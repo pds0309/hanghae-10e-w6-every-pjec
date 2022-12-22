@@ -56,6 +56,9 @@ export const userSlice = createSlice({
       state.user = null;
       state.isLogined = false;
     },
+    changeProfile: (state, action) => {
+      state.user.image = action.payload;
+    },
   },
   extraReducers: {
     [__getMyProfile.pending]: state => {
@@ -106,6 +109,6 @@ export const userSlice = createSlice({
   },
 });
 
-export const { login, logout } = userSlice.actions;
+export const { login, logout, changeProfile } = userSlice.actions;
 
 export default userSlice;

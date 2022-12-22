@@ -5,7 +5,7 @@ export const __postComment = createAsyncThunk('postComment', async (payload, thu
   try {
     const { postId, comment } = payload;
     const { data } = await commentApi.submit(postId, { comment });
-    return thunkAPI.fulfillWithValue({ ...payload, commentId: data.commentId });
+    return thunkAPI.fulfillWithValue({ ...payload, ...data.value });
   } catch (e) {
     return thunkAPI.rejectWithValue(e);
   }

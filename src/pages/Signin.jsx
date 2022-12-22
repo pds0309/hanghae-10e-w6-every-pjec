@@ -36,7 +36,8 @@ const Signin = () => {
   return (
     <Wrap>
       <Title>
-        <span style={{ color: Colors.brand }}>SERVICE</span> NAME 로그인
+        <span style={{ color: Colors.brand }}>애</span>브리
+        <span style={{ color: Colors.brand }}>&nbsp;플</span>젝 로그인
       </Title>
       <FormWrap onSubmit={handleFormSubmit}>
         <Label>로그인 ID</Label>
@@ -59,7 +60,7 @@ const Signin = () => {
           width="366px"
           height="30px"
           placeholder="비밀번호를 입력하세요."
-          type='password'
+          type="password"
           required
           value={password}
           onChange={e => setPassword(e.target.value)}

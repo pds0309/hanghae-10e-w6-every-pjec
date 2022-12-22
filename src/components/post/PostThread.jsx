@@ -1,7 +1,8 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import bookmarkApi from '../../apis/bookmarkApi';
 import {
   clearError,
   initDeleteSuccess,
@@ -21,6 +22,22 @@ const PostThread = ({ postId }) => {
   const navigate = useNavigate();
   const { user } = useSelector(state => state.user);
   const { post, isLoading, error, deleteSuccess } = useSelector(state => state.posts);
+  const [isLogined, setIsLogined] = useState(false);
+  const [bookmarkToggle, setBookmarkToggle] = useState(false);
+
+  useEffect(() => {
+    user &&
+      bookmarkApi.getBookmark(user?.userId).then(res => {
+        const data = res.data.data.filter(pick => pick.postId === post.postId);
+        console.log(data);
+        data.length ? setBookmarkToggle(true) : setBookmarkToggle(false);
+      });
+  }, [postId]);
+
+  useEffect(() => {
+    const loginStatus = localStorage.getItem('isLogined');
+    if (loginStatus === 'true') setIsLogined(true);
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -54,6 +71,20 @@ const PostThread = ({ postId }) => {
     }
   };
 
+  const handleBookmarkToggle = () => {
+    setBookmarkToggle(prev => !prev);
+  };
+
+  const createBookmark = () => {
+    bookmarkApi.createBookmark(post.postId).then(res => console.log(res.data.message));
+    handleBookmarkToggle();
+  };
+
+  const deleteBookmark = () => {
+    bookmarkApi.deleteBookmark(post.postId).then(res => console.log(res.data.message));
+    handleBookmarkToggle();
+  };
+
   if (isLoading) {
     return (
       <PostSection>
@@ -77,7 +108,22 @@ const PostThread = ({ postId }) => {
     <PostSection>
       {post && (
         <>
-          <h1>{post.title}</h1>
+          <TitleWrap>
+            {post.title}
+            {isLogined &&
+              user?.userId !== post.userId &&
+              (!bookmarkToggle ? (
+                <Bookmark
+                  onClick={createBookmark}
+                  src="https://cdn-icons-png.flaticon.com/512/4218/4218997.png"
+                />
+              ) : (
+                <Bookmark
+                  onClick={deleteBookmark}
+                  src="https://cdn-icons-png.flaticon.com/512/4219/4219000.png"
+                />
+              ))}
+          </TitleWrap>
           <WriteInfoContainer>
             <WriterBox>
               <ProfileImage imageUrl={post.iamge} />
@@ -136,6 +182,15 @@ const WriteInfoContainer = styled.div`
   justify-content: space-between;
 `;
 
+const TitleWrap = styled.h1`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const Bookmark = styled.img`
+  width: 50px;
+  height: 50px;
+`;
 const WriterBox = styled.div`
   display: flex;
   justify-content: flex-end;

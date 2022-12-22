@@ -59,6 +59,7 @@ const Signin = () => {
           width="366px"
           height="30px"
           placeholder="비밀번호를 입력하세요."
+          type='password'
           required
           value={password}
           onChange={e => setPassword(e.target.value)}

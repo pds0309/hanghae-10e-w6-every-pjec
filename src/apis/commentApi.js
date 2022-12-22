@@ -7,7 +7,7 @@ const commentApi = {
   // 댓글 목록 조회
   getAllForPost: postId => noAuthInstance.get(apiByPathVariable(COMMENT_API, postId)),
   // 댓글 등록
-  submit: (postId, { comment }) =>
+  register: (postId, { comment }) =>
     authInstance.post(apiByPathVariable(COMMENT_API, postId), { comment }),
   // 댓글 업데이트
   updateById: (commentId, { comment }) =>

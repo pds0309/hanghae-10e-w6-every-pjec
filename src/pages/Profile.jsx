@@ -25,7 +25,7 @@ import TwinInputBox from '../components/common/TwinInputBox';
 import DivideLine from '../components/common/DivideLine';
 import ValidationText from '../components/common/ValidationText';
 import Input from '../components/common/Input';
-import imageApi from '../apis/imaegApi';
+import imageApi from '../apis/imageApi';
 
 const genOptionByParam = param => {
   return param ? { value: param, label: param } : '';

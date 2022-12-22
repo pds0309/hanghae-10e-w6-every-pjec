@@ -9,7 +9,7 @@ const postApi = {
   // 게시글 상세 조회
   getById: postId => noAuthInstance.get(apiByPathVariable(POST_API, postId)),
   // 게시글 등록
-  submit: postSubmitRequest => authInstance.post(POST_API, postSubmitRequest),
+  register: postSubmitRequest => authInstance.post(POST_API, postSubmitRequest),
   // 게시글 업데이트
   updateById: (postId, postUpdateRequest) =>
     authInstance.put(apiByPathVariable(POST_API, postId), postUpdateRequest),

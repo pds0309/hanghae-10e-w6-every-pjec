@@ -7,7 +7,7 @@ const Postupload = () => {
   const navigate = useNavigate();
   const postUpload = post => {
     postApi
-      .submit({
+      .register({
         title: post.title,
         content: post.content,
         division: post.division.value,

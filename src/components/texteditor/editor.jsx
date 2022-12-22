@@ -5,7 +5,7 @@ import styles from './editor.module.css';
 import QuillImageDropAndPaste from 'quill-image-drop-and-paste';
 import 'react-quill/dist/quill.snow.css';
 import MagicUrl from 'quill-magic-url';
-import imageApi from '../../apis/imaegApi';
+import imageApi from '../../apis/imageApi';
 
 const QuillWrapper = styled.div`
   .ql-editor {

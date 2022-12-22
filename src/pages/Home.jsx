@@ -57,7 +57,6 @@ const Wrap = styled.div`
 const Backgr = styled.div`
   width: 1480px;
   height: 400px;
-  background: #d9d9d9;
 `;
 
 const CardListContainer = styled.div`

@@ -19,7 +19,11 @@ export const __getNotifications = createAsyncThunk('getNotifications', async (_,
 export const notificationSlice = createSlice({
   name: 'notifications',
   initialState,
-  reducers: {},
+  reducers: {
+    confirmAlert: (state, action) => {
+      state.notifications = state.notifications.filter(noti => noti.alertId !== action.payload);
+    },
+  },
   extraReducers: {
     [__getNotifications.pending]: state => {
       state.isLoading = true;
@@ -35,6 +39,6 @@ export const notificationSlice = createSlice({
   },
 });
 
-// export const { } = notificationSlice.actions;
+export const { confirmAlert } = notificationSlice.actions;
 
 export default notificationSlice;

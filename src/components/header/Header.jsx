@@ -6,10 +6,12 @@ import { login, logout, __getMyProfile } from '../../redux/modules/UserSlice';
 import { Colors } from '../../styles';
 import SelectBox from './SelectBox';
 import ProfileImage from '../common/ProfileImage';
+import AlertContainer from './AlertContainer';
 
 const Header = ({ user, isLogined }) => {
   const dispatch = useDispatch();
   const [myBoxVisible, setMyBoxVisible] = useState(false);
+  const [alertBoxVisible, setAlertBoxVisible] = useState(false);
 
   const accessToken = localStorage.getItem('accessToken');
   useEffect(() => {
@@ -28,6 +30,10 @@ const Header = ({ user, isLogined }) => {
     setMyBoxVisible(false);
   }, []);
 
+  const handleCloseAlertBoxVisible = useCallback(() => {
+    setAlertBoxVisible(false);
+  }, []);
+
   const UnAuthSectionContents = () => {
     return (
       <>
@@ -36,10 +42,14 @@ const Header = ({ user, isLogined }) => {
       </>
     );
   };
-
   const AuthSectionContents = () => {
     return (
       <>
+        <AlertContainer
+          visible={alertBoxVisible}
+          onClick={() => setAlertBoxVisible(!alertBoxVisible)}
+          onClose={handleCloseAlertBoxVisible}
+        />
         <HeaderLink to="postupload">모집글 작성</HeaderLink>
         <div style={{ display: 'flex', gridColumnGap: '8px' }}>
           <div>
@@ -89,7 +99,7 @@ const Header = ({ user, isLogined }) => {
 const StyledHeader = styled.div`
   display: flex;
   justify-content: space-between;
-  padding: 26px 0;
+  padding: 26px 0 20px 0;
 `;
 
 const RightSection = styled.div`
@@ -129,6 +139,7 @@ const MyBoxLink = styled(Link)`
 const HeaderLink = styled(Link)`
   text-decoration: none;
   color: black;
+  margin-top: 2px;
   font-size: 16px;
   font-weight: 600;
   :hover {

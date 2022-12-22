@@ -148,7 +148,7 @@ const Profile = (size = { size }) => {
                 >
                   프로필 변경
                 </Button>
-                <div style={{ height: '0px', overflow: 'hidden' }}>
+                <div style={{ height: '0px', overflow: 'hidden', width: '0px' }}>
                   <input
                     ref={imageUploadRef}
                     type="file"

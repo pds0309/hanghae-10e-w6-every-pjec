@@ -27,7 +27,6 @@ const Count = styled.span`
   font-size: 10px;
   line-height: 15px;
   color: white;
-  padding-top: 3px;
 `;
 
 export default AlertCounter;

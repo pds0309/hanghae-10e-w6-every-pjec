@@ -26,28 +26,35 @@ const AlertContainer = ({ visible, onClose, onClick }) => {
   return (
     <>
       {!isLoading && (
-        <Container>
-          <AlertCounter>{notifications.length || ' '}</AlertCounter>
-          <AlertIcon onClick={onClick} />
-          <SelectBox visible={visible} onClose={onClose} location={-10}>
-            {notifications.length !== 0 ? (
-              notifications.map((noti, i) => (
-                <SelectBoxContents key={i}>
-                  <p style={{ margin: 0 }}>{noti.message}</p>
-                  <p
-                    style={{ margin: 0, textAlign: 'right', fontSize: '12px', color: Colors.grey }}
-                  >
-                    날짜
-                  </p>
-                </SelectBoxContents>
-              ))
-            ) : (
-              <DefaultSelectBoxContents>
-                <div style={{ height: '300px' }}>읽지 않은 알림이.. 없습니다!!</div>
-              </DefaultSelectBoxContents>
-            )}
-          </SelectBox>
-        </Container>
+        <>
+          <Container>
+            <AlertCounter>{notifications.length || ' '}</AlertCounter>
+            <AlertIcon onClick={onClick} />
+            <SelectBox visible={visible} onClose={onClose} location={-10} boxMarginTop={0}>
+              {notifications.length !== 0 ? (
+                notifications.map((noti, i) => (
+                  <SelectBoxContents key={i}>
+                    <p style={{ margin: '0' }}>{noti.message}</p>
+                    <p
+                      style={{
+                        margin: '0',
+                        textAlign: 'right',
+                        fontSize: '12px',
+                        color: Colors.grey,
+                      }}
+                    >
+                      날짜
+                    </p>
+                  </SelectBoxContents>
+                ))
+              ) : (
+                <DefaultSelectBoxContents>
+                  <div style={{ height: '300px' }}>읽지 않은 알림이.. 없습니다!!</div>
+                </DefaultSelectBoxContents>
+              )}
+            </SelectBox>
+          </Container>
+        </>
       )}
     </>
   );

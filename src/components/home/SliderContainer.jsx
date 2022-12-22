@@ -10,9 +10,9 @@ import { Autoplay, EffectFade, Navigation, Pagination } from 'swiper';
 import styled from 'styled-components';
 import Logo from '../common/Logo';
 
-import jjanggu from '../../image/jjanggu.gif';
-import girl from '../../image/girl.gif';
-import ppika from '../../image/ppika.gif';
+import jjanggu from '../../assets/jjanggu.gif';
+import girl from '../../assets/girl.gif';
+import ppika from '../../assets/ppika.gif';
 
 const SliderContainer = () => {
   const items = [{ src: jjanggu }, { src: girl }, { src: ppika }];

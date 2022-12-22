@@ -10,6 +10,7 @@ import Input from '../components/common/Input';
 import Label from '../components/common/Label';
 import ValidationText from '../components/common/ValidationText';
 import { USER_VALIDATION } from '../constants/validation.js';
+import { Colors } from '../styles';
 const Signup = () => {
   const navigate = useNavigate();
   //value, valid, onChange
@@ -109,7 +110,8 @@ const Signup = () => {
   return (
     <Wrap>
       <Title>
-        <span style={{ color: '#CE7777' }}>SERVICE</span> NAME 회원가입
+        <span style={{ color: Colors.brand }}>애</span>브리
+        <span style={{ color: Colors.brand }}>&nbsp;플</span>젝 회원가입
       </Title>
       <FormWrap onSubmit={postUserInfo}>
         <Label>로그인 ID</Label>

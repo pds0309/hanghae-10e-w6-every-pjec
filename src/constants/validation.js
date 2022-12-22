@@ -22,8 +22,8 @@ export const USER_VALIDATION = Object.freeze({
   PASSWORD_CONFIRM: {
     SUCCESS: '비밀번호가 일치합니다.',
     WARNING: '비밀번호가 일치하지 않습니다.',
-    REGEX: password => {
-      return password;
+    FUNC: (current, password) => {
+      return password === current;
     },
   },
 });

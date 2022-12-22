@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import ReactQuill from 'react-quill';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -122,9 +123,12 @@ const PostThread = ({ postId }) => {
           </PostBasicInfoContainer>
           <h2 style={{ marginBottom: '0px' }}>모집상세내용</h2>
           <DivideLine />
-          <div style={{ minHeight: '300px' }}>
-            <p style={{ lineHeight: '180%' }}>{post.content}</p>
-          </div>
+          <ReactQuill
+            style={{ width: '600px' }}
+            value={post.content}
+            readOnly={true}
+            theme={'bubble'}
+          />
         </>
       )}
     </PostSection>

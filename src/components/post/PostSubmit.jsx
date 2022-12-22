@@ -12,26 +12,40 @@ import {
   PERIOD_OPTIONS,
   STACK_OPTIONS,
 } from '../../constants/postOptions';
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { getFormattedDate } from '../../utils/dateHandler';
+import EditorContainer from '../texteditor/EditorContainer';
+import { useSelector } from 'react-redux';
 
 const genOptionByParam = param => {
   return param ? { value: param, label: param } : '';
 };
 
 const PostSubmit = ({ post, submitApi, pageName }) => {
+  const location = useLocation();
   const navigation = useNavigate();
-  const [division, setDivision] = useState(genOptionByParam(post.division));
-  const [onoff, setOnoff] = useState(genOptionByParam(post.onoff));
+  const { user } = useSelector(state => state.user);
+  const [division, setDivision] = useState(genOptionByParam(post?.division));
+  const [onoff, setOnoff] = useState(genOptionByParam(post?.onoff));
   const [startDate, setStartDate] = useState(getFormattedDate(post?.startDate).split(' ')[0] ?? '');
-  const [period, setPeriod] = useState(genOptionByParam(post.period));
+  const [period, setPeriod] = useState(genOptionByParam(post?.period));
   const [stack, setStack] = useState(
-    post.stack ? post.stack.split(',').map(st => genOptionByParam(st)) : [],
+    post?.stack ? post.stack.split(',').map(st => genOptionByParam(st)) : [],
   );
   const [title, setTitle] = useState(post?.title ?? '');
   const [content, setContent] = useState(post?.content ?? '');
   const [contact, setContact] = useState(post?.contact ?? '');
+  const [rendered, setRendered] = useState(false);
+  useEffect(() => {
+    setRendered(true);
+  }, []);
+
+  if (!post && location.pathname.substring(1).indexOf('/') !== -1) {
+    const path = location.pathname.substring(1).split('/')[1];
+    navigation('/postdetail/' + path);
+  }
+
   const handleSubmit = e => {
     e.preventDefault();
     if (!division || !onoff || !period || stack.length === 0 || !contact) {
@@ -61,6 +75,9 @@ const PostSubmit = ({ post, submitApi, pageName }) => {
     return Date.now() < Date.parse(date);
   };
 
+  const handleContentChange = useCallback(e => {
+    setContent(e.value);
+  }, []);
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -145,12 +162,9 @@ const PostSubmit = ({ post, submitApi, pageName }) => {
             onChange={e => setTitle(e.target.value)}
           />
           <Label>내용</Label>
-          <TextBox
-            placeholder="내용을 입력하세요"
-            value={content}
-            onChange={e => setContent(e.target.value)}
-          />
-
+          {user && rendered && (
+            <EditorContainer value={content} onChange={handleContentChange} userId={user.userId} />
+          )}
           <ButtonWrap>
             <Button type="submit">{pageName}하기</Button>
             <Button
@@ -167,22 +181,6 @@ const PostSubmit = ({ post, submitApi, pageName }) => {
     </div>
   );
 };
-
-const TextBox = styled.textarea`
-  ::placeholder {
-    font-weight: 100;
-  }
-  font-size: 16px;
-  font-weight: 600;
-  width: -webkit-fill-available;
-  height: 700px;
-  border: 1px solid #bbc8d4;
-  border-radius: 6px;
-  padding: 20px;
-  margin-top: 10px;
-  margin-bottom: 20px;
-  resize: none;
-`;
 
 const ButtonWrap = styled.div`
   margin-right: 43%;

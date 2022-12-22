@@ -1,28 +1,33 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import LinkGroup from '../components/common/LinkGroup';
 import PostCard from '../components/post/PostCard';
-import { __getAllPosts } from '../redux/modules/PostSlice';
+import { __myPostById } from '../redux/modules/PostSlice';
+import { useDispatch } from 'react-redux';
 
 const Post = () => {
   const dispatch = useDispatch();
   const { posts } = useSelector(state => state.posts);
+
   const [postList, setPostList] = useState([]);
 
   useEffect(() => {
-    if (posts) {
-      setPostList(posts);
-    }
-  }, [posts]);
-
-  const fetchTodos = async () => {
-    dispatch(__getAllPosts());
+    fetchTodos();
+    // if (posts) {
+    //   setPostList(posts);
+    // }
+  }, []);
+  const fetchTodos = () => {
+    dispatch(__myPostById());
   };
 
   // 임시필터링 함수
   const getPostFilteredBy = param => {
-    setPostList(posts.filter(post => post.division === param));
+    console.log(postList);
+    const filterpost = postList.mePost.filter(post => post.division === param);
+    console.log(filterpost);
+    setPostList(postList?.filter(post => post.division === param));
   };
   return (
     <Wrap>
@@ -35,8 +40,11 @@ const Post = () => {
           () => getPostFilteredBy('스터디'),
         ]}
       />
+
       <CardListContainer>
-        {posts && postList.map(post => <PostCard key={post.postId} post={post} />)}
+        {postList.mePost?.map(post => (
+          <PostCard key={post.postId} post={post} />
+        ))}
       </CardListContainer>
     </Wrap>
   );

@@ -38,6 +38,10 @@ const useInput = (initValue, validationParam, inputDependencyValue) => {
       setValid({ isInputValidated: false, message: validationParam.WARNING });
       return;
     }
+    if (validationParam.FUNC && !validationParam.FUNC(value, inputDependencyValue)) {
+      setValid({ isInputValidated: false, message: validationParam.WARNING });
+      return;
+    }
     setValid({
       isInputValidated: true,
       message: validationParam.SUCCESS,

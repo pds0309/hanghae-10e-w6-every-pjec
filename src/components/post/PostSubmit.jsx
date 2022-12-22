@@ -165,6 +165,7 @@ const PostSubmit = ({ post, submitApi, pageName }) => {
           {user && rendered && (
             <EditorContainer value={content} onChange={handleContentChange} userId={user.userId} />
           )}
+          <br />
           <ButtonWrap>
             <Button type="submit">{pageName}하기</Button>
             <Button
